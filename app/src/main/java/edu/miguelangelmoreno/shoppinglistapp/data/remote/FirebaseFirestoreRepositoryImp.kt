@@ -1,7 +1,8 @@
 package edu.miguelangelmoreno.shoppinglistapp.data.remote
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseAuthResponse
+import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseFirestoreResponse
 import edu.miguelangelmoreno.shoppinglistapp.domain.repository.FirestoreRepository
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import kotlinx.coroutines.tasks.await
@@ -10,8 +11,7 @@ import javax.inject.Inject
 class FirebaseFirestoreRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : FirestoreRepository {
-    override suspend fun insertUser(user: User): Boolean {
-        var isSuccessful = false
+    override suspend fun insertUser(user: User): FirebaseFirestoreResponse {
         val colUsers = firestore.collection("Users")
         val newUser = hashMapOf(
             "name" to user.name,
@@ -20,11 +20,11 @@ class FirebaseFirestoreRepositoryImp @Inject constructor(
             "phone_number" to user.phone
         )
 
-        colUsers.document().set(newUser)
-            .addOnSuccessListener { isSuccessful = true }
-            .addOnFailureListener { isSuccessful = false }
-            .await()
-        return isSuccessful
+        return try {
+            colUsers.document().set(newUser).await()
+            FirebaseFirestoreResponse.Success
+        }catch (e: Exception) {
+            FirebaseFirestoreResponse.Error(e.message ?: "Unknown error inserting the user")
+        }
     }
-
 }

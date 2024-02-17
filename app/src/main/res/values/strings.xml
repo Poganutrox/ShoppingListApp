@@ -12,4 +12,10 @@
     <string name="signup_phone">Móvil (Opcional)</string>
     <string name="signup_repeatPassword">Repetir contraseña</string>
     <string name="signup_btn_createAccount">Crear mi cuenta</string>
+
+    <string name="email_already_exists">El correo electrónico ya está en uso.</string>
+    <string name="email_already_in_use">El correo electrónico ya está siendo utilizado.</string>
+    <string name="user_not_exists">El usuario introducido no existe.</string>
+    <string name="invalid_credentials">Credenciales inválidas.</string>
+    <string name="unknown_error">Error desconocido durante la operación.</string>
 </resources>

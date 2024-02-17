@@ -37,19 +37,27 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.loginState.collect { loginState ->
-                    if(loginState.isLoading){
+                    with(binding) {
+                        tilEmail.error = loginState.emailErrorMessage
+                        tilPassword.error = loginState.passwordErrorMessage
+                    }
+
+                    if (loginState.isLoading) {
                         if (loginState.isSuccessful) {
-                            Toast.makeText(this@LoginActivity, "Acceso concedido", Toast.LENGTH_SHORT)
-                                .show()
+                            //PONER AQUI LA LOGICA DE ENTRAR EN EL HOME
+                            Toast.makeText(this@LoginActivity,"Acceso concedido",Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            Toast.makeText(this@LoginActivity, "Acceso denegado", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(this@LoginActivity,loginState.loginErrorMessage
+                                ,Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
             }
         }
     }
+
 
     private fun initListeners() {
         with(binding) {
@@ -62,8 +70,13 @@ class LoginActivity : AppCompatActivity() {
             btnLogin.setOnClickListener {
                 it.dismissKeyboard()
                 viewModel.loginState.value.let { loginState ->
+                    val email = tieEmail.text.toString()
+                    val password = tiePassword.text.toString()
+
                     if (loginState.emailIsValid && loginState.passwordIsValid) {
-                        viewModel.login(tieEmail.text.toString(), tiePassword.text.toString())
+                        viewModel.login(email, password)
+                    } else {
+                        viewModel.validateLogin(email, password)
                     }
                 }
             }
@@ -80,20 +93,6 @@ class LoginActivity : AppCompatActivity() {
             val password = tiePassword.text.toString()
 
             viewModel.validateLogin(email, password)
-
-            viewModel.loginState.value.let { loginState ->
-                if (!loginState.emailIsValid) {
-                    tilEmail.error = getString(R.string.login_error_email)
-                } else {
-                    tilEmail.error = null
-                }
-
-                if (!loginState.passwordIsValid) {
-                    tilPassword.error = getString(R.string.login_error_password)
-                } else {
-                    tilPassword.error = null
-                }
-            }
         }
     }
 

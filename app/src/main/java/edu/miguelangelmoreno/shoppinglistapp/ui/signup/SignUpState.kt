@@ -8,5 +8,12 @@ data class SignUpState (
     val passwordIsValid : Boolean = false,
     val passwordRepeatedIsValid : Boolean = false,
     val isSuccessful : Boolean = false,
-    val isLoading : Boolean = false
+    val isLoading : Boolean = false,
+    val emailErrorMessage : String? = null,
+    val passwordErrorMessage : String? = null,
+    val nameErrorMessage : String? = null,
+    val lastNameErrorMessage : String? = null,
+    val phoneErrorMessage : String? = null,
+    val repeatPasswordErrorMessage : String? = null,
+    val signUpError: String? = null
 )

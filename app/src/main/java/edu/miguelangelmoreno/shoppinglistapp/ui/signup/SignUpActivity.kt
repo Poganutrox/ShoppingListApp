@@ -43,13 +43,28 @@ class SignUpActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.signUpState.collect { signUpState ->
-                    if(signUpState.isLoading){
-                        if (signUpState.isSuccessful) {
-                            Toast.makeText(this@SignUpActivity, "Usuario registrado", Toast.LENGTH_SHORT)
-                                .show()
+                    with(binding) {
+                        tilEmail.error = signUpState.emailErrorMessage
+                        tilPassword.error = signUpState.passwordErrorMessage
+                        tilName.error = signUpState.nameErrorMessage
+                        tilLastName.error = signUpState.lastNameErrorMessage
+                        tilPhone.error = signUpState.phoneErrorMessage
+                        tilRepeatPassword.error = signUpState.repeatPasswordErrorMessage
+                    }
+                    if (signUpState.isLoading) {
+                        if (!signUpState.isSuccessful) {
+                            Toast.makeText(
+                                this@SignUpActivity,
+                                signUpState.signUpError,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            Toast.makeText(this@SignUpActivity, "Error al registrar usuario", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(
+                                this@SignUpActivity,
+                                "Cuenta creada con éxito",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
                         }
                     }
                 }
@@ -88,7 +103,8 @@ class SignUpActivity : AppCompatActivity() {
                             name = tieName.text.toString(),
                             lastName = tieLastName.text.toString(),
                             email = tieEmail.text.toString(),
-                            phone = tiePhone.text.toString()
+                            phone = tiePhone.text.toString(),
+                            password = tiePassword.toString()
                         )
 
                         viewModel.signUp(newUser)
@@ -108,20 +124,6 @@ class SignUpActivity : AppCompatActivity() {
             val repeatPassword = tieRepeatPassword.text.toString()
 
             viewModel.validateSignUp(name, lastName, phone, email, password, repeatPassword)
-
-            viewModel.signUpState.value.let { loginState ->
-                if (!loginState.emailIsValid) {
-                    tilEmail.error = getString(R.string.login_error_email)
-                } else {
-                    tilEmail.error = null
-                }
-
-                if (!loginState.passwordIsValid) {
-                    tilPassword.error = getString(R.string.login_error_password)
-                } else {
-                    tilPassword.error = null
-                }
-            }
         }
     }
 
