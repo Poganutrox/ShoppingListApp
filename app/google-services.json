@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "717480757925",
+    "project_id": "shoppinglistapp-345cc",
+    "storage_bucket": "shoppinglistapp-345cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717480757925:android:0c8310dde16c6c2a649b4c",
+        "android_client_info": {
+          "package_name": "edu.miguelangelmoreno.shoppinglistapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "717480757925-bveae5cv0h181einu9q0b5lb0sjnf8n8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.miguelangelmoreno.shoppinglistapp",
+            "certificate_hash": "f6b983529960091f92480b3d67bfc01ab0098f1e"
+          }
+        },
+        {
+          "client_id": "717480757925-32tt1rgpajpq88vfcn00r8nbbfom6rvg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEonPyJpQVTsL2E7SQ2p8yyyDD5B_G-D0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "717480757925-32tt1rgpajpq88vfcn00r8nbbfom6rvg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
