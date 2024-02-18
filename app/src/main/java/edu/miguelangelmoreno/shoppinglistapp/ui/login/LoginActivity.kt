@@ -15,6 +15,7 @@ import edu.miguelangelmoreno.shoppinglistapp.core.ex.dismissKeyboard
 import edu.miguelangelmoreno.shoppinglistapp.core.ex.loseFocusAfterAction
 import edu.miguelangelmoreno.shoppinglistapp.core.ex.onTextChanged
 import edu.miguelangelmoreno.shoppinglistapp.databinding.ActivityLoginBinding
+import edu.miguelangelmoreno.shoppinglistapp.ui.home.HomeActivity
 import edu.miguelangelmoreno.shoppinglistapp.ui.signup.SignUpActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -44,12 +45,10 @@ class LoginActivity : AppCompatActivity() {
 
                     if (loginState.isLoading) {
                         if (loginState.isSuccessful) {
-                            //PONER AQUI LA LOGICA DE ENTRAR EN EL HOME
-                            Toast.makeText(this@LoginActivity,"Acceso concedido",Toast.LENGTH_SHORT
-                            ).show()
+                            HomeActivity.navigate(this@LoginActivity)
                         } else {
-                            Toast.makeText(this@LoginActivity,loginState.loginErrorMessage
-                                ,Toast.LENGTH_SHORT
+                            Toast.makeText(
+                                this@LoginActivity, loginState.loginErrorMessage, Toast.LENGTH_LONG
                             ).show()
                         }
                     }
@@ -76,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
                     if (loginState.emailIsValid && loginState.passwordIsValid) {
                         viewModel.login(email, password)
                     } else {
-                        viewModel.validateLogin(email, password)
+                        viewModel.validateLogin(this@LoginActivity, email, password)
                     }
                 }
             }
@@ -92,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
             val email = tieEmail.text.toString()
             val password = tiePassword.text.toString()
 
-            viewModel.validateLogin(email, password)
+            viewModel.validateLogin(this@LoginActivity, email, password)
         }
     }
 

@@ -123,7 +123,7 @@ class SignUpActivity : AppCompatActivity() {
             val password = tiePassword.text.toString()
             val repeatPassword = tieRepeatPassword.text.toString()
 
-            viewModel.validateSignUp(name, lastName, phone, email, password, repeatPassword)
+            viewModel.validateSignUp(this@SignUpActivity, name, lastName, phone, email, password, repeatPassword)
         }
     }
 

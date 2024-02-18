@@ -1,5 +1,6 @@
 package edu.miguelangelmoreno.shoppinglistapp.ui.signup
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,7 @@ class SignUpViewModel @Inject constructor(
         get() = _signUpState
 
     fun validateSignUp(
+        context: Context,
         name: String,
         lastName: String,
         phone: String,
@@ -32,21 +34,15 @@ class SignUpViewModel @Inject constructor(
         password: String,
         passwordRepeated: String
     ) {
-        val nameResponse = validateName(name)
-        val lastNameResponse = validateLastName(lastName)
-        val phoneResponse = validatePhone(phone)
-        val emailResponse = validateEmail(email)
-        val passwordResponse = validatePassword(password)
-        val repeatPasswordResponse = validatePasswordRepeated(password, passwordRepeated)
+        val nameResponse = validateName(context, name)
+        val lastNameResponse = validateLastName(context, lastName)
+        val phoneResponse = validatePhone(context, phone)
+        val emailResponse = validateEmail(context, email)
+        val passwordResponse = validatePassword(context, password)
+        val repeatPasswordResponse = validatePasswordRepeated(context, password, passwordRepeated)
 
-        updateSignUpState(
-            nameResponse,
-            lastNameResponse,
-            phoneResponse,
-            emailResponse,
-            passwordResponse,
-            repeatPasswordResponse
-        )
+        updateSignUpState(nameResponse, lastNameResponse, phoneResponse, emailResponse,
+            passwordResponse, repeatPasswordResponse)
     }
 
     private fun updateSignUpState(

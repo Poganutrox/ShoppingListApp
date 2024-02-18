@@ -3,11 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/loginFragment">
-
+    app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.login.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        android:id="@+id/homeFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/listsFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.ListsFragment"
+        android:label="fragment_lists"
+        tools:layout="@layout/fragment_lists" />
+    <fragment
+        android:id="@+id/salesFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.SalesFragment"
+        android:label="fragment_sales"
+        tools:layout="@layout/fragment_sales" />
 </navigation>

@@ -1,57 +1,65 @@
 package edu.miguelangelmoreno.shoppinglistapp.core.ex
 
+import android.content.Context
+import androidx.core.content.ContextCompat.getString
+import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.ui.login.LoginResponse
 import edu.miguelangelmoreno.shoppinglistapp.ui.signup.SignUpResponse
 
 private val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
 private val phoneRegex = Regex("^[6789]\\d{8}$")
 
-fun validatePasswordRepeated(password: String, passwordRepeated: String): SignUpResponse {
-    if(passwordRepeated != password){
-        return SignUpResponse.RepeatPasswordError("Las contraseñas no coinciden")
+fun validatePasswordRepeated(
+    context: Context,
+    password: String,
+    passwordRepeated: String
+): SignUpResponse {
+    if (passwordRepeated != password) {
+        return SignUpResponse.RepeatPasswordError(context.getString(R.string.error_passwords_do_not_match))
     }
     return SignUpResponse.Success
 }
 
-fun validateName(name: String) : SignUpResponse{
-    if(name.isEmpty()){
-        return SignUpResponse.NameError("El nombre no puede estar vacios")
+fun validateName(context: Context, name: String): SignUpResponse {
+    if (name.isEmpty()) {
+        return SignUpResponse.NameError(context.getString(R.string.error_name_empty))
     }
     return SignUpResponse.Success
 }
-fun validateLastName(lastName: String) : SignUpResponse{
-    if(lastName.isEmpty()){
-        return SignUpResponse.LastNameError("Los apellidos no pueden estar vacios")
+
+fun validateLastName(context: Context, lastName: String): SignUpResponse {
+    if (lastName.isEmpty()) {
+        return SignUpResponse.LastNameError(context.getString(R.string.error_last_name_empty))
     }
     return SignUpResponse.Success
 }
-fun validatePhone(phone: String) : SignUpResponse {
-    if (phone.isNotEmpty()){
+
+fun validatePhone(context: Context, phone: String): SignUpResponse {
+    if (phone.isNotEmpty()) {
         if (!phoneRegex.matches(phone)) {
-            SignUpResponse.PhoneError("Formato de teléfono no válido")
+            SignUpResponse.PhoneError(context.getString(R.string.error_invalid_phone_format))
         }
     }
     return SignUpResponse.Success
 }
 
-fun validateEmail(email: String) : LoginResponse {
-    if( email.isEmpty()){
-        return LoginResponse.EmailError("El email no puede estar vacio")
+fun validateEmail(context: Context, email: String): LoginResponse {
+    if (email.isEmpty()) {
+        return LoginResponse.EmailError(context.getString(R.string.error_email_empty))
+    } else if (!emailRegex.matches(email)) {
+        return LoginResponse.EmailError(context.getString(R.string.error_invalid_email_format))
     }
-    else if(!emailRegex.matches(email)){
-        return LoginResponse.EmailError("El formato del email no es correcto")
+
+    return LoginResponse.Success
+}
+
+fun validatePassword(context: Context, password: String): LoginResponse {
+    if (password.isNullOrEmpty()) {
+        return LoginResponse.PasswordError(context.getString(R.string.error_password_empty))
+    } else if (password.length < 6) {
+        return LoginResponse.PasswordError(context.getString(R.string.error_password_too_short))
     }
 
     return LoginResponse.Success
 }
 
-fun validatePassword(password: String) : LoginResponse{
-    if(password.isNullOrEmpty()){
-        return LoginResponse.PasswordError("La contraseña no puede estar vacia")
-    }
-    else if(password.length < 6){
-        return LoginResponse.PasswordError("La contraseña debe contener al menos 6 valores")
-    }
-
-    return LoginResponse.Success
-}

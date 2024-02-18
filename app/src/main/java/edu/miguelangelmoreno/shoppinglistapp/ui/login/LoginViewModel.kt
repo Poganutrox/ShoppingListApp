@@ -1,5 +1,6 @@
 package edu.miguelangelmoreno.shoppinglistapp.ui.login
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,9 +21,9 @@ class LoginViewModel @Inject constructor(
     val loginState: StateFlow<LoginState>
         get() = _loginState
 
-    fun validateLogin(email: String, password: String) {
-        val emailResponse = validateEmail(email)
-        val passwordResponse = validatePassword(password)
+    fun validateLogin(context: Context, email: String, password: String) {
+        val emailResponse = validateEmail(context, email)
+        val passwordResponse = validatePassword(context, password)
 
         val emailErrorMessage = when (emailResponse) {
             is LoginResponse.EmailError -> emailResponse.message
