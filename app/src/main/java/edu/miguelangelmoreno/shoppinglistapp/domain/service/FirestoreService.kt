@@ -1,8 +1,8 @@
-package edu.miguelangelmoreno.shoppinglistapp.domain.repository
+package edu.miguelangelmoreno.shoppinglistapp.domain.service
 
 import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseFirestoreResponse
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 
-interface FirestoreRepository {
+interface FirestoreService {
     suspend fun insertUser(user: User): FirebaseFirestoreResponse
 }

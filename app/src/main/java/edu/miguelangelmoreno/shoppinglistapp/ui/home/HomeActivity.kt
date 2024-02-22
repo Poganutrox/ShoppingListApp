@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import dagger.hilt.android.AndroidEntryPoint
 import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.databinding.ActivityHomeBinding
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     companion object {
         fun navigate(context: Context) {

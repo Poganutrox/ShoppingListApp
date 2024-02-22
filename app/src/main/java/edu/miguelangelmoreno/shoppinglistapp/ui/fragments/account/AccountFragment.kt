@@ -1,4 +1,4 @@
-package edu.miguelangelmoreno.shoppinglistapp.ui.fragments
+package edu.miguelangelmoreno.shoppinglistapp.ui.fragments.account
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

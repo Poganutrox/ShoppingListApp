@@ -1,7 +1,6 @@
-package edu.miguelangelmoreno.shoppinglistapp.core.ex
+package edu.miguelangelmoreno.shoppinglistapp.utils
 
 import android.content.Context
-import androidx.core.content.ContextCompat.getString
 import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.ui.login.LoginResponse
 import edu.miguelangelmoreno.shoppinglistapp.ui.signup.SignUpResponse

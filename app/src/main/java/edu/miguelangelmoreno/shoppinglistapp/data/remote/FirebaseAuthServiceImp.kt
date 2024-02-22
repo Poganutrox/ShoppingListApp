@@ -5,13 +5,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseAuthResponse
-import edu.miguelangelmoreno.shoppinglistapp.domain.repository.AuthRepository
+import edu.miguelangelmoreno.shoppinglistapp.domain.service.AuthService
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseAuthRepositoryImp @Inject constructor(
+class FirebaseAuthServiceImp @Inject constructor(
     private val firebaseAuth: FirebaseAuth
-) : AuthRepository {
+) : AuthService {
     override suspend fun login(email: String, password: String): FirebaseAuthResponse {
         return try {
             firebaseAuth.signInWithEmailAndPassword(email, password).await()

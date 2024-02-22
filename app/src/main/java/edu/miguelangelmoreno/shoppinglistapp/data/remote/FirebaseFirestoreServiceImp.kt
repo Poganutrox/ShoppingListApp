@@ -1,16 +1,15 @@
 package edu.miguelangelmoreno.shoppinglistapp.data.remote
 
 import com.google.firebase.firestore.FirebaseFirestore
-import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseAuthResponse
 import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseFirestoreResponse
-import edu.miguelangelmoreno.shoppinglistapp.domain.repository.FirestoreRepository
+import edu.miguelangelmoreno.shoppinglistapp.domain.service.FirestoreService
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseFirestoreRepositoryImp @Inject constructor(
+class FirebaseFirestoreServiceImp @Inject constructor(
     private val firestore: FirebaseFirestore
-) : FirestoreRepository {
+) : FirestoreService {
     override suspend fun insertUser(user: User): FirebaseFirestoreResponse {
         val colUsers = firestore.collection("Users")
         val newUser = hashMapOf(

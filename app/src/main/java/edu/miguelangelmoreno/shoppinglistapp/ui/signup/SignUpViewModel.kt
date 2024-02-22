@@ -4,13 +4,18 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.miguelangelmoreno.shoppinglistapp.core.ex.*
-import edu.miguelangelmoreno.shoppinglistapp.data.remote.FirebaseAuthRepositoryImp
-import edu.miguelangelmoreno.shoppinglistapp.data.remote.FirebaseFirestoreRepositoryImp
+import edu.miguelangelmoreno.shoppinglistapp.data.remote.FirebaseAuthServiceImp
+import edu.miguelangelmoreno.shoppinglistapp.data.remote.FirebaseFirestoreServiceImp
 import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseAuthResponse
 import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseFirestoreResponse
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import edu.miguelangelmoreno.shoppinglistapp.ui.login.LoginResponse
+import edu.miguelangelmoreno.shoppinglistapp.utils.validateEmail
+import edu.miguelangelmoreno.shoppinglistapp.utils.validateLastName
+import edu.miguelangelmoreno.shoppinglistapp.utils.validateName
+import edu.miguelangelmoreno.shoppinglistapp.utils.validatePassword
+import edu.miguelangelmoreno.shoppinglistapp.utils.validatePasswordRepeated
+import edu.miguelangelmoreno.shoppinglistapp.utils.validatePhone
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val firestoreRepositoryImp: FirebaseFirestoreRepositoryImp,
-    private val authRepositoryImp: FirebaseAuthRepositoryImp
+    private val firestoreRepositoryImp: FirebaseFirestoreServiceImp,
+    private val authRepositoryImp: FirebaseAuthServiceImp
 ) : ViewModel() {
     private val _signUpState = MutableStateFlow(SignUpState())
     val signUpState: StateFlow<SignUpState>

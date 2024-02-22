@@ -6,22 +6,22 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.HomeFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/accountFragment"
-        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.AccountFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.account.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/listsFragment"
-        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.ListsFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.lists.ListsFragment"
         android:label="fragment_lists"
         tools:layout="@layout/fragment_lists" />
     <fragment
         android:id="@+id/salesFragment"
-        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.SalesFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.sales.SalesFragment"
         android:label="fragment_sales"
         tools:layout="@layout/fragment_sales" />
 </navigation>
