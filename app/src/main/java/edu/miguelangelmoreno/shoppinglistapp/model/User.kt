@@ -1,9 +1,10 @@
 package edu.miguelangelmoreno.shoppinglistapp.model
 
 data class User(
-    val name : String,
-    val lastName : String,
-    val phone : String,
+    val id : Integer? = null,
+    val name : String? = null,
+    val lastName : String? = null,
+    val phone : String? = null,
     val email : String,
     val password : String
 )

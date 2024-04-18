@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,6 +19,7 @@ import edu.miguelangelmoreno.shoppinglistapp.core.ex.loseFocusAfterAction
 import edu.miguelangelmoreno.shoppinglistapp.core.ex.onTextChanged
 import edu.miguelangelmoreno.shoppinglistapp.databinding.ActivitySignUpBinding
 import edu.miguelangelmoreno.shoppinglistapp.model.User
+import edu.miguelangelmoreno.shoppinglistapp.ui.home.HomeActivity
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -44,28 +47,26 @@ class SignUpActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.signUpState.collect { signUpState ->
                     with(binding) {
-                        tilEmail.error = signUpState.emailErrorMessage
-                        tilPassword.error = signUpState.passwordErrorMessage
                         tilName.error = signUpState.nameErrorMessage
                         tilLastName.error = signUpState.lastNameErrorMessage
+                        tilEmail.error = signUpState.emailErrorMessage
                         tilPhone.error = signUpState.phoneErrorMessage
+                        tilPassword.error = signUpState.passwordErrorMessage
                         tilRepeatPassword.error = signUpState.repeatPasswordErrorMessage
+                        //progressBar.isVisible = signUpState.isLoading
                     }
-                    if (signUpState.isLoading) {
-                        if (!signUpState.isSuccessful) {
-                            Toast.makeText(
-                                this@SignUpActivity,
-                                signUpState.signUpError,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                this@SignUpActivity,
-                                "Cuenta creada con éxito",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
-                        }
+
+                    if (signUpState.isSuccessful) {
+                        Toast.makeText(
+                            this@SignUpActivity,
+                            "Cuenta creada con éxito",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    } else if (!signUpState.signUpError.isNullOrEmpty()) {
+                        Toast.makeText(
+                            this@SignUpActivity, signUpState.signUpError, Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
@@ -74,47 +75,69 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun initListeners() {
         with(binding) {
-            tieName.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            tieName.onTextChanged { onFieldChanged() }
-
-            tieLastName.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            tieLastName.onTextChanged { onFieldChanged() }
-
-
-            tieEmail.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            tieEmail.onTextChanged { onFieldChanged() }
-
-            tiePhone.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            tiePhone.onTextChanged { onFieldChanged() }
-
-            tiePassword.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
-            tiePassword.onTextChanged { onFieldChanged() }
-
-            tieRepeatPassword.loseFocusAfterAction(EditorInfo.IME_ACTION_DONE)
-            tieRepeatPassword.onTextChanged { onFieldChanged() }
-
-            btnCreateAccount.setOnClickListener {
-                it.dismissKeyboard()
-                viewModel.signUpState.value.let { signUpState ->
-                    if (signUpState.nameIsValid && signUpState.lastNameIsValid && signUpState.emailIsValid
-                        && signUpState.phoneIsValid && signUpState.passwordIsValid && signUpState.passwordRepeatedIsValid
-                    ) {
-                        val newUser = User(
-                            name = tieName.text.toString(),
-                            lastName = tieLastName.text.toString(),
-                            email = tieEmail.text.toString(),
-                            phone = tiePhone.text.toString(),
-                            password = tiePassword.toString()
-                        )
-
-                        viewModel.signUp(newUser)
-                    }
-                }
+            tieName.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onFocusLost()
             }
+            tieLastName.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onFocusLost()
+            }
+            tiePhone.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onFocusLost()
+            }
+            tieEmail.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onFocusLost()
+            }
+            tiePassword.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onFocusLost()
+            }
+            tieRepeatPassword.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onFocusLost()
+            }
+
+            tieName.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            tieLastName.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            tieEmail.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            tiePhone.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            tiePassword.loseFocusAfterAction(EditorInfo.IME_ACTION_NEXT)
+            tieRepeatPassword.loseFocusAfterAction(EditorInfo.IME_ACTION_DONE)
+
+            btnCreateAccount.setOnClickListener { onSignUpClick(it) }
         }
     }
 
-    private fun onFieldChanged() {
+    private fun onSignUpClick(view: View) {
+        view.dismissKeyboard()
+        viewModel.signUpState.value.let { signUpState ->
+            with(binding) {
+                val name = tieName.text.toString()
+                val lastName = tieLastName.text.toString()
+                val email = tieEmail.text.toString()
+                val phone = tiePhone.text.toString()
+                val password = tiePassword.text.toString()
+                val repeatPassword = tieRepeatPassword.text.toString()
+
+                if (signUpState.nameIsValid && signUpState.lastNameIsValid && signUpState.emailIsValid
+                    && signUpState.passwordIsValid && signUpState.passwordRepeatedIsValid
+                    && signUpState.phoneIsValid
+                ) {
+                    //progressBar.isVisible = true
+                    val newUser = User(null, name, lastName, phone, email, password)
+                    viewModel.signUp(newUser)
+                } else {
+                    viewModel.isNameValid(this@SignUpActivity, name)
+                    viewModel.isLastNameValid(this@SignUpActivity, lastName)
+                    viewModel.isEmailValid(this@SignUpActivity, email)
+                    viewModel.isPhoneValid(this@SignUpActivity, phone)
+                    viewModel.isPasswordValid(this@SignUpActivity, password)
+                    viewModel.isRepeatPasswordValid(this@SignUpActivity, password, repeatPassword)
+                }
+            }
+
+
+        }
+    }
+
+    private fun onFocusLost() {
         with(binding) {
             val name = tieName.text.toString()
             val lastName = tieLastName.text.toString()
@@ -123,7 +146,30 @@ class SignUpActivity : AppCompatActivity() {
             val password = tiePassword.text.toString()
             val repeatPassword = tieRepeatPassword.text.toString()
 
-            viewModel.validateSignUp(this@SignUpActivity, name, lastName, phone, email, password, repeatPassword)
+            if (!tieName.hasFocus()) {
+                viewModel.isNameValid(this@SignUpActivity, name)
+            }
+
+            if (!tieLastName.hasFocus()) {
+                viewModel.isLastNameValid(this@SignUpActivity, lastName)
+            }
+
+            if (!tieEmail.hasFocus()) {
+                viewModel.isEmailValid(this@SignUpActivity, email)
+            }
+
+            if (!tiePhone.hasFocus()) {
+                viewModel.isPhoneValid(this@SignUpActivity, phone)
+            }
+
+
+            if (!tiePassword.hasFocus()) {
+                viewModel.isPasswordValid(this@SignUpActivity, password)
+            }
+
+            if (!tieRepeatPassword.hasFocus()) {
+                viewModel.isRepeatPasswordValid(this@SignUpActivity, password, repeatPassword)
+            }
         }
     }
 

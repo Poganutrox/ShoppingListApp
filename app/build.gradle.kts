@@ -1,9 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
     id("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -56,19 +56,11 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    //Firebase
-    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
-    implementation("com.google.firebase:firebase-firestore-ktx:24.10.2")
     
     val navVersion = "2.7.0"
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-
-    //Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
-    implementation("com.google.firebase:firebase-analytics")
 
     val daggerVersion = "2.50"
     val hiltVersion = "1.1.0"

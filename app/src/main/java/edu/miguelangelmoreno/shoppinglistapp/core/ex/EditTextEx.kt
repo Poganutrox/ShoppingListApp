@@ -18,7 +18,7 @@ fun EditText.onTextChanged(listener: (String) -> Unit) {
 fun EditText.loseFocusAfterAction(action: Int) {
     this.setOnEditorActionListener { v, actionId, _ ->
         if (actionId == action) {
-            //this.dismissKeyboard()
+            this.dismissKeyboard()
             v.clearFocus()
         }
 

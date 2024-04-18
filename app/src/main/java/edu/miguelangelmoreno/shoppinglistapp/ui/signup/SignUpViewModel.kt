@@ -4,17 +4,14 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.miguelangelmoreno.shoppinglistapp.data.remote.FirebaseAuthServiceImp
-import edu.miguelangelmoreno.shoppinglistapp.data.remote.FirebaseFirestoreServiceImp
-import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseAuthResponse
-import edu.miguelangelmoreno.shoppinglistapp.data.response.FirebaseFirestoreResponse
+import edu.miguelangelmoreno.shoppinglistapp.data.ShoppingListRepository
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import edu.miguelangelmoreno.shoppinglistapp.ui.login.LoginResponse
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateEmail
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateLastName
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateName
 import edu.miguelangelmoreno.shoppinglistapp.utils.validatePassword
-import edu.miguelangelmoreno.shoppinglistapp.utils.validatePasswordRepeated
+import edu.miguelangelmoreno.shoppinglistapp.utils.validateRepeatPassword
 import edu.miguelangelmoreno.shoppinglistapp.utils.validatePhone
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,106 +20,105 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val firestoreRepositoryImp: FirebaseFirestoreServiceImp,
-    private val authRepositoryImp: FirebaseAuthServiceImp
+    private val shoppingListRepository: ShoppingListRepository
 ) : ViewModel() {
     private val _signUpState = MutableStateFlow(SignUpState())
     val signUpState: StateFlow<SignUpState>
         get() = _signUpState
 
-    fun validateSignUp(
-        context: Context,
-        name: String,
-        lastName: String,
-        phone: String,
-        email: String,
-        password: String,
-        passwordRepeated: String
-    ) {
-        val nameResponse = validateName(context, name)
-        val lastNameResponse = validateLastName(context, lastName)
-        val phoneResponse = validatePhone(context, phone)
-        val emailResponse = validateEmail(context, email)
-        val passwordResponse = validatePassword(context, password)
-        val repeatPasswordResponse = validatePasswordRepeated(context, password, passwordRepeated)
-
-        updateSignUpState(nameResponse, lastNameResponse, phoneResponse, emailResponse,
-            passwordResponse, repeatPasswordResponse)
-    }
-
-    private fun updateSignUpState(
-        nameResponse: SignUpResponse,
-        lastNameResponse: SignUpResponse,
-        phoneResponse: SignUpResponse,
-        emailResponse: LoginResponse,
-        passwordResponse: LoginResponse,
-        repeatPasswordResponse: SignUpResponse
-    ) {
-        val nameErrorMessage = getErrorMessage(nameResponse)
-        val lastNameErrorMessage = getErrorMessage(lastNameResponse)
-        val phoneErrorMessage = getErrorMessage(phoneResponse)
-        val emailErrorMessage = getErrorMessage(emailResponse)
-        val passwordErrorMessage = getErrorMessage(passwordResponse)
-        val repeatPasswordErrorMessage = getErrorMessage(repeatPasswordResponse)
-
-        _signUpState.value = SignUpState(
-            nameIsValid = nameResponse == SignUpResponse.Success,
-            lastNameIsValid = lastNameResponse == SignUpResponse.Success,
-            phoneIsValid = phoneResponse == SignUpResponse.Success,
-            emailIsValid = emailResponse == LoginResponse.Success,
-            passwordIsValid = passwordResponse == LoginResponse.Success,
-            passwordRepeatedIsValid = repeatPasswordResponse == SignUpResponse.Success,
-            nameErrorMessage = nameErrorMessage,
-            lastNameErrorMessage = lastNameErrorMessage,
-            phoneErrorMessage = phoneErrorMessage,
-            emailErrorMessage = emailErrorMessage,
-            passwordErrorMessage = passwordErrorMessage,
-            repeatPasswordErrorMessage = repeatPasswordErrorMessage
-        )
-    }
 
     fun signUp(user: User) {
         viewModelScope.launch {
-            var isSuccessful: Boolean
-            val authResponse = authRepositoryImp.signUp(user.email, user.password)
-            var errorMessage: String? = when (authResponse) {
-                FirebaseAuthResponse.EmailAlreadyExists -> "El correo electrónico ya está en uso."
-                is FirebaseAuthResponse.Error -> "Error desconocido: ${authResponse.message}"
-                else -> null
-            }
-            isSuccessful = (authResponse == FirebaseAuthResponse.Success)
+            _signUpState.value = SignUpState(isLoading = true)
+            val apiResponse = shoppingListRepository.createUser(user)
+            var isSuccessful = apiResponse.success
 
-            if (isSuccessful) {
-                val firestoreResponse = firestoreRepositoryImp.insertUser(user)
-                errorMessage = when (firestoreResponse) {
-                    is FirebaseFirestoreResponse.Error -> "Error en el registro del usuario"
-                    else -> null
-                }
-                isSuccessful = (firestoreResponse == FirebaseFirestoreResponse.Success)
-            }
-
-            _signUpState.value = SignUpState(
-                isLoading = true, isSuccessful = isSuccessful, signUpError = errorMessage
+            _signUpState.value = _signUpState.value.copy(
+                isLoading = true,
+                isSuccessful = isSuccessful,
+                signUpError = apiResponse.error
             )
         }
     }
 
-    private fun getErrorMessage(response: SignUpResponse): String? {
-        return when (response) {
-            is SignUpResponse.NameError -> response.message
-            is SignUpResponse.LastNameError -> response.message
-            is SignUpResponse.PhoneError -> response.message
-            is SignUpResponse.RepeatPasswordError -> response.message
+    fun isNameValid(context: Context, name: String) {
+        val nameResponse = validateName(context, name)
+
+        val nameErrorMessage = when (nameResponse) {
+            is SignUpResponse.NameError -> nameResponse.message
             else -> null
         }
+
+        _signUpState.value = _signUpState.value.copy(
+            nameIsValid = (nameResponse == SignUpResponse.Success),
+            nameErrorMessage = nameErrorMessage
+        )
+    }
+    fun isLastNameValid(context: Context, lastName: String) {
+        val lastNameResponse = validateLastName(context, lastName)
+
+        val lastNameErrorMessage = when (lastNameResponse) {
+            is SignUpResponse.LastNameError -> lastNameResponse.message
+            else -> null
+        }
+
+        _signUpState.value = _signUpState.value.copy(
+            lastNameIsValid = (lastNameResponse == SignUpResponse.Success),
+            lastNameErrorMessage = lastNameErrorMessage
+        )
+    }
+    fun isEmailValid(context: Context, email: String) {
+        val emailResponse = validateEmail(context, email)
+
+        val emailErrorMessage = when (emailResponse) {
+            is LoginResponse.EmailError -> emailResponse.message
+            else -> null
+        }
+
+        _signUpState.value = _signUpState.value.copy(
+            emailIsValid = (emailResponse == LoginResponse.Success),
+            emailErrorMessage = emailErrorMessage
+        )
     }
 
+    fun isPhoneValid(context: Context, phone: String) {
+        val phoneResponse = validatePhone(context, phone)
 
-    private fun getErrorMessage(response: LoginResponse): String? {
-        return when (response) {
-            is LoginResponse.EmailError -> response.message
-            is LoginResponse.PasswordError -> response.message
+        val phoneErrorMessage = when (phoneResponse) {
+            is SignUpResponse.PhoneError -> phoneResponse.message
             else -> null
         }
+
+        _signUpState.value = _signUpState.value.copy(
+            phoneIsValid = (phoneResponse == SignUpResponse.Success),
+            phoneErrorMessage = phoneErrorMessage
+        )
+    }
+
+    fun isPasswordValid(context: Context, password: String) {
+        val passwordResponse = validatePassword(context, password)
+
+        val passwordErrorMessage = when (passwordResponse) {
+            is LoginResponse.PasswordError -> passwordResponse.message
+            else -> null
+        }
+
+        _signUpState.value = _signUpState.value.copy(
+            passwordIsValid = (passwordResponse == LoginResponse.Success),
+            passwordErrorMessage = passwordErrorMessage
+        )
+    }
+    fun isRepeatPasswordValid(context: Context, password: String, repeatPassword: String) {
+        val repeatPasswordResponse = validateRepeatPassword(context, password, repeatPassword)
+
+        val repeatPasswordErrorMessage = when (repeatPasswordResponse) {
+            is SignUpResponse.RepeatPasswordError -> repeatPasswordResponse.message
+            else -> null
+        }
+
+        _signUpState.value = _signUpState.value.copy(
+            passwordRepeatedIsValid = (repeatPasswordResponse == SignUpResponse.Success),
+            repeatPasswordErrorMessage = repeatPasswordErrorMessage
+        )
     }
 }

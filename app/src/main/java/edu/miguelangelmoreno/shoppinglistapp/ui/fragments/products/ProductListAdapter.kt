@@ -1,5 +1,6 @@
-package edu.miguelangelmoreno.shoppinglistapp.ui.fragments.lists
+package edu.miguelangelmoreno.shoppinglistapp.ui.fragments.products
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,18 +33,23 @@ class ProductListAdapter(
         private val binding : ProductItemBinding = ProductItemBinding.bind(view)
         fun bind(product: Product){
             binding.tvName.text = product.name
-            binding.tvPrice.text = "${product.currentPrice} ${product.unit}"
-            binding.tvSize.text = product.size
+            binding.tvPrice.text = "${product.priceHistories.get(0).price} euros"
+            binding.tvSize.text = product.onSale.toString()
 
-            if(product.supermarket == 1){
+            if(product.supermarket.id == 1){
                 binding.imgLogo.setImageResource(R.mipmap.ic_mercadona_foreground)
             }else{
                 binding.imgLogo.setImageResource(R.mipmap.ic_carrefour_foreground)
             }
 
-            Glide.with(view)
-                .load(product.image)
-                .into(binding.imgProduct)
+            try{
+                Glide.with(view)
+                    .load(product.image)
+                    .error(view.context.getDrawable(R.drawable.ic_home))
+                    .into(binding.imgProduct)
+            }catch (e : Exception){
+                Log.i("Excepción en Glide", e.toString())
+            }
 
             binding.imgAdd.setOnClickListener { assignToList(product, adapterPosition) }
         }

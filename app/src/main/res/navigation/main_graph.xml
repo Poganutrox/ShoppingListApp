@@ -15,13 +15,60 @@
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
     <fragment
-        android:id="@+id/listsFragment"
-        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.lists.ListsFragment"
-        android:label="fragment_lists"
-        tools:layout="@layout/fragment_lists" />
+        android:id="@+id/productsFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.products.ProductsFragment"
+        android:label="fragment_products"
+        tools:layout="@layout/fragment_products">
+        <action
+            android:id="@+id/action_productsFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim" />
+        <argument
+            android:name="productName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue='""' />
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="favItems"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="onSale"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="mercadonaId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="diaId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="alcampoId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="consumId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
     <fragment
         android:id="@+id/salesFragment"
         android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.sales.SalesFragment"
         android:label="fragment_sales"
         tools:layout="@layout/fragment_sales" />
+    <fragment
+        android:id="@+id/filtersFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.filters.FiltersFragment"
+        android:label="fragment_filters"
+        tools:layout="@layout/fragment_filters" >
+        <action
+            android:id="@+id/action_filtersFragment_to_productsFragment"
+            app:destination="@id/productsFragment" />
+    </fragment>
 </navigation>

@@ -8,7 +8,7 @@ import edu.miguelangelmoreno.shoppinglistapp.ui.signup.SignUpResponse
 private val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
 private val phoneRegex = Regex("^[6789]\\d{8}$")
 
-fun validatePasswordRepeated(
+fun validateRepeatPassword(
     context: Context,
     password: String,
     passwordRepeated: String
