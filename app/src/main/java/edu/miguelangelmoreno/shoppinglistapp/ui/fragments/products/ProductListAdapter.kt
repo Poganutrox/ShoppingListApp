@@ -33,8 +33,7 @@ class ProductListAdapter(
         private val binding : ProductItemBinding = ProductItemBinding.bind(view)
         fun bind(product: Product){
             binding.tvName.text = product.name
-            binding.tvPrice.text = "${product.priceHistories.get(0).price} euros"
-            binding.tvSize.text = product.onSale.toString()
+            binding.tvPrice.text = "${product.priceHistories.get(0).price} €"
 
             if(product.supermarket.id == 1){
                 binding.imgLogo.setImageResource(R.mipmap.ic_mercadona_foreground)
@@ -50,8 +49,6 @@ class ProductListAdapter(
             }catch (e : Exception){
                 Log.i("Excepción en Glide", e.toString())
             }
-
-            binding.imgAdd.setOnClickListener { assignToList(product, adapterPosition) }
         }
     }
 }

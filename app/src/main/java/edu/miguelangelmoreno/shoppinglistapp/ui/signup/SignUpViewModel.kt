@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.data.ShoppingListRepository
 import edu.miguelangelmoreno.shoppinglistapp.model.User
+import edu.miguelangelmoreno.shoppinglistapp.ui.fragments.account.AccountState
 import edu.miguelangelmoreno.shoppinglistapp.ui.login.LoginResponse
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateEmail
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateLastName
@@ -16,6 +18,7 @@ import edu.miguelangelmoreno.shoppinglistapp.utils.validatePhone
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,17 +33,24 @@ class SignUpViewModel @Inject constructor(
     fun signUp(user: User) {
         viewModelScope.launch {
             _signUpState.value = SignUpState(isLoading = true)
-            val apiResponse = shoppingListRepository.createUser(user)
-            var isSuccessful = apiResponse.success
-
-            _signUpState.value = _signUpState.value.copy(
-                isLoading = true,
-                isSuccessful = isSuccessful,
-                signUpError = apiResponse.error
-            )
+            val response = shoppingListRepository.createUser(user)
+            if(response.isSuccessful){
+                _signUpState.value = SignUpState(isSuccessful = response.isSuccessful, isLoading = false)
+            }else{
+                val errorMessage = when (response.code()) {
+                    HttpURLConnection.HTTP_NOT_ACCEPTABLE -> R.string.http_not_acceptable
+                    HttpURLConnection.HTTP_INTERNAL_ERROR -> R.string.http_internal_error
+                    403 -> R.string.http_forbidden
+                    else -> R.string.http_default_error
+                }
+                _signUpState.value = SignUpState(isLoading = false, isSuccessful = false, signUpError = errorMessage)
+            }
+            resetState()
         }
     }
-
+    private fun resetState() {
+        _signUpState.value = SignUpState()
+    }
     fun isNameValid(context: Context, name: String) {
         val nameResponse = validateName(context, name)
 

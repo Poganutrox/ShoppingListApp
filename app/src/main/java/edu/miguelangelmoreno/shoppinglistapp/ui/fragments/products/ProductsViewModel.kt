@@ -25,13 +25,8 @@ class ProductsViewModel @Inject constructor(
     private var categoryId: Int? = null
     private var supermarketIds: Set<Int>? = null
     private var onSale: Boolean? = false
-    private var _currentProducts = repository.fetchProducts(
-        page = page,
-        productName = productName,
-        categoryId = categoryId,
-        supermarketIds = supermarketIds,
-        onSale = onSale
-    )
+    private var _currentProducts =
+        repository.fetchProducts(page, productName, categoryId, supermarketIds, onSale)
     val currentProducts: Flow<PageResponse<Product>>
         get() = _currentProducts
 
@@ -45,24 +40,11 @@ class ProductsViewModel @Inject constructor(
         this.page = page
         this.categoryId = if (categoryId == -1) null else categoryId
         this.productName = if (productName.isNullOrBlank()) null else productName
-        this.supermarketIds = if(supermarketIds?.isEmpty() == true) null else supermarketIds
+        this.supermarketIds = if (supermarketIds?.isEmpty() == true) null else supermarketIds
         this.onSale = onSale
 
-        Log.i("page", this.page.toString())
-        Log.i("productName", this.productName ?: "null")
-        Log.i("categoryId", this.categoryId.toString())
-        Log.i("supermarketIds", this.supermarketIds.toString())
-        Log.i("onSale", this.onSale.toString())
-
-        _currentProducts = repository.fetchProducts(
-            page = page,
-            productName = productName,
-            categoryId = categoryId,
-            supermarketIds = supermarketIds,
-            onSale = onSale
-        )
-
-
+        _currentProducts =
+            repository.fetchProducts(page, productName, categoryId, supermarketIds, onSale)
     }
 
 }

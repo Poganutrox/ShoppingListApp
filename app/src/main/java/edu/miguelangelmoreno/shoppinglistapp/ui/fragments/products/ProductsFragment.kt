@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.databinding.DialogAddProductBinding
@@ -48,28 +52,20 @@ class ProductsFragment : Fragment() {
     }
 
     private fun getProducts() {
-        var productName: String? = args.productName
-        var categoryId: Int? = args.categoryId
+        var productName: String? = if (args.productName.isNullOrEmpty()) null else args.productName
+        var categoryId: Int? = if (args.categoryId == -1) null else args.categoryId
         val onSale = args.onSale
-
         val supermarketIds = mutableSetOf<Int>()
         if (args.mercadonaId != -1) supermarketIds.add(args.mercadonaId)
         if (args.diaId != -1) supermarketIds.add(args.diaId)
         if (args.consumId != -1) supermarketIds.add(args.consumId)
         if (args.alcampoId != -1) supermarketIds.add(args.alcampoId)
 
-        vm.setFilters(
-            page = 0,
-            productName = productName,
-            categoryId = categoryId,
-            supermarketIds = supermarketIds,
-            onSale = onSale
-        )
+        vm.setFilters(0, productName, categoryId, supermarketIds, onSale)
 
         if (checkConnection(requireContext())) {
             lifecycleScope.launch {
                 vm.currentProducts.collect {
-                    Log.i("TAMAÑO LISTA", it.content.size.toString())
                     if (!it.empty) {
                         adapter.submitList(it.content)
                     } else {
@@ -78,6 +74,7 @@ class ProductsFragment : Fragment() {
                 }
             }
         } else {
+            adapter.submitList(emptyList())
             Toast.makeText(
                 requireContext(),
                 "No connection",
@@ -92,6 +89,7 @@ class ProductsFragment : Fragment() {
             assignToList = { product, position ->
                 showAlertDialog()
             })
+        binding.recyclerProducts.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerProducts.adapter = adapter
     }
 

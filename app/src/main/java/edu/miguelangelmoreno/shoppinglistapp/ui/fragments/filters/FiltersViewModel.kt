@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FiltersViewModel @Inject constructor(
-    private val repository : ShoppingListRepository
+    repository : ShoppingListRepository
 ) : ViewModel() {
 
     private var _currentCategories = repository.getCategories()

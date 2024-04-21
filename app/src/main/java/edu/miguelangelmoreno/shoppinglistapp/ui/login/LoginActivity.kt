@@ -1,10 +1,10 @@
 package edu.miguelangelmoreno.shoppinglistapp.ui.login
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -12,18 +12,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import edu.miguelangelmoreno.shoppinglistapp.R
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.prefs
 import edu.miguelangelmoreno.shoppinglistapp.core.ex.dismissKeyboard
-import edu.miguelangelmoreno.shoppinglistapp.core.ex.loseFocusAfterAction
-import edu.miguelangelmoreno.shoppinglistapp.core.ex.onTextChanged
 import edu.miguelangelmoreno.shoppinglistapp.databinding.ActivityLoginBinding
 import edu.miguelangelmoreno.shoppinglistapp.ui.home.HomeActivity
 import edu.miguelangelmoreno.shoppinglistapp.ui.signup.SignUpActivity
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
+    companion object {
+        fun navigate(context: Context) {
+            val intent = Intent(context, LoginActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
+
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
 
@@ -61,8 +65,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initListeners() {
         with(binding) {
+            cbRemember.setOnCheckedChangeListener { _, isChecked -> prefs.setRemember(isChecked) }
             btnLogin.setOnClickListener { onLoginClick(it) }
-            btnSignUp.setOnClickListener {
+            tvSignUp.setOnClickListener {
                 SignUpActivity.navigate(this@LoginActivity)
             }
         }
@@ -70,14 +75,17 @@ class LoginActivity : AppCompatActivity() {
 
     private fun onLoginClick(view: View) {
         view.dismissKeyboard()
-        val email = binding.tieEmail.text.toString()
-        val password = binding.tiePassword.text.toString()
-        validateFields(email, password)
+        with(binding){
+            val email = tieEmail.text.toString()
+            val password = tiePassword.text.toString()
 
-        viewModel.loginState.value.let { loginState ->
-            if (loginState.emailIsValid && loginState.passwordIsValid) {
-                binding.progressBar.isVisible = true
-                viewModel.login(email, password)
+            validateFields(email, password)
+
+            viewModel.loginState.value.let { loginState ->
+                if (loginState.emailIsValid && loginState.passwordIsValid) {
+                    progressBar.isVisible = true
+                    viewModel.login(email, password)
+                }
             }
         }
     }

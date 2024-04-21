@@ -6,13 +6,15 @@ import edu.miguelangelmoreno.shoppinglistapp.model.User
 import edu.miguelangelmoreno.shoppinglistapp.model.responses.ApiResponse
 import edu.miguelangelmoreno.shoppinglistapp.model.responses.PageResponse
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
 class ShoppingListRepository @Inject constructor(
     private val dataSource: ShoppingListDataSource
 ) {
-    suspend fun checkAccess(user: User): ApiResponse<User> = dataSource.checkAccess(user)
-    suspend fun createUser(user: User): ApiResponse<User> = dataSource.createUser(user)
+    suspend fun checkAccess(user: User): Response<User> = dataSource.checkAccess(user)
+    suspend fun createUser(user: User): Response<User> = dataSource.createUser(user)
+    suspend fun updateUser(user: User): Response<User> = dataSource.updateUser(user)
     fun getCategories(): Flow<ApiResponse<List<Category>>> = dataSource.getCategories()
     fun fetchProducts(
         page: Int,

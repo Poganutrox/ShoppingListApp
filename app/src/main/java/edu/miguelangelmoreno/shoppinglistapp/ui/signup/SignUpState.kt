@@ -15,5 +15,5 @@ data class SignUpState (
     val lastNameErrorMessage : String? = null,
     val phoneErrorMessage : String? = null,
     val repeatPasswordErrorMessage : String? = null,
-    val signUpError: String? = null
+    val signUpError: Int? = null
 )

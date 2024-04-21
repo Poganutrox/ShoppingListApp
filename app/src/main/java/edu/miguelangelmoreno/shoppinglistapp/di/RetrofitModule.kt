@@ -1,10 +1,17 @@
 package edu.miguelangelmoreno.shoppinglistapp.di
 
+import android.content.Context
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import edu.miguelangelmoreno.shoppinglistapp.Prefs
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.prefs
 import edu.miguelangelmoreno.shoppinglistapp.domain.service.APIService
+import edu.miguelangelmoreno.shoppinglistapp.utils.Constants.Companion.BASE_URL
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -12,14 +19,29 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
+
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(@ApplicationContext context: Context): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
+    private fun createOkHttpClient(context: Context): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val authToken = prefs.getToken()
+                chain.proceed(chain.request().newBuilder().also {
+                    if (authToken != null) {
+                        it.addHeader("Authorization", "Bearer $authToken")
+                    }
+                }.build())
+            }.build()
+    }
+
 
     @Provides
     @Singleton

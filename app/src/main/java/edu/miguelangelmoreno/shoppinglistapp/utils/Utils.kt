@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Message
+import android.widget.Toast
 
 fun checkConnection(context: Context): Boolean {
     val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -19,4 +21,11 @@ fun checkConnection(context: Context): Boolean {
             }
     }
     return false
+}
+
+
+fun makeToast(context: Context, message: String) : Unit {
+    return Toast.makeText(
+        context, message, Toast.LENGTH_LONG
+    ).show()
 }
