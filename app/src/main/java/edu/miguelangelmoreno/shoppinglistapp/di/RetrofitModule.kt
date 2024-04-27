@@ -1,15 +1,13 @@
 package edu.miguelangelmoreno.shoppinglistapp.di
 
 import android.content.Context
-import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import edu.miguelangelmoreno.shoppinglistapp.Prefs
-import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.prefs
-import edu.miguelangelmoreno.shoppinglistapp.domain.service.APIService
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.userPrefs
+import edu.miguelangelmoreno.shoppinglistapp.data.service.APIService
 import edu.miguelangelmoreno.shoppinglistapp.utils.Constants.Companion.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -33,7 +31,7 @@ object RetrofitModule {
     private fun createOkHttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val authToken = prefs.getToken()
+                val authToken = userPrefs.getToken()
                 chain.proceed(chain.request().newBuilder().also {
                     if (authToken != null) {
                         it.addHeader("Authorization", "Bearer $authToken")

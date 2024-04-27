@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.miguelangelmoreno.shoppinglistapp.R
-import edu.miguelangelmoreno.shoppinglistapp.data.ShoppingListRepository
+import edu.miguelangelmoreno.shoppinglistapp.data.repository.UserRepository
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import java.net.HttpURLConnection
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountViewModel @Inject constructor(private val repository: ShoppingListRepository) :
+class AccountViewModel @Inject constructor(private val userRepository: UserRepository) :
     ViewModel() {
     private val _accountState = MutableStateFlow(AccountState())
     val accountState: StateFlow<AccountState>
@@ -22,7 +22,7 @@ class AccountViewModel @Inject constructor(private val repository: ShoppingListR
     fun updateUser(user: User) {
         viewModelScope.launch {
             _accountState.value = AccountState(isLoading = true)
-            val response = repository.updateUser(user)
+            val response = userRepository.updateUser(user)
             if (response.isSuccessful) {
                 _accountState.value = AccountState(isUpdated = true, isLoading = false)
             } else {

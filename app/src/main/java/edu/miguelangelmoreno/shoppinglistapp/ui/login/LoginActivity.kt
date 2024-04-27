@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.prefs
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.userPrefs
 import edu.miguelangelmoreno.shoppinglistapp.core.ex.dismissKeyboard
 import edu.miguelangelmoreno.shoppinglistapp.databinding.ActivityLoginBinding
 import edu.miguelangelmoreno.shoppinglistapp.ui.home.HomeActivity
@@ -50,11 +50,12 @@ class LoginActivity : AppCompatActivity() {
                         progressBar.isVisible = loginState.isLoading
                     }
 
+                    val loginErrorMessage = loginState.loginErrorMessage?.let { getString(it) }
                     if (loginState.isSuccessful) {
                         HomeActivity.navigate(this@LoginActivity)
-                    } else if (!loginState.loginErrorMessage.isNullOrEmpty()) {
+                    } else if (!loginErrorMessage.isNullOrEmpty()) {
                         Toast.makeText(
-                            this@LoginActivity, loginState.loginErrorMessage, Toast.LENGTH_LONG
+                            this@LoginActivity, loginErrorMessage, Toast.LENGTH_LONG
                         ).show()
                     }
                 }
@@ -65,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initListeners() {
         with(binding) {
-            cbRemember.setOnCheckedChangeListener { _, isChecked -> prefs.setRemember(isChecked) }
+            cbRemember.setOnCheckedChangeListener { _, isChecked -> userPrefs.setRemember(isChecked) }
             btnLogin.setOnClickListener { onLoginClick(it) }
             tvSignUp.setOnClickListener {
                 SignUpActivity.navigate(this@LoginActivity)

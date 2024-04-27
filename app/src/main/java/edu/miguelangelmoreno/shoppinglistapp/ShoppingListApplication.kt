@@ -2,24 +2,30 @@ package edu.miguelangelmoreno.shoppinglistapp
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import edu.miguelangelmoreno.shoppinglistapp.data.database.ShoppingListDatabase
 import edu.miguelangelmoreno.shoppinglistapp.ui.home.HomeActivity
+import edu.miguelangelmoreno.shoppinglistapp.utils.prefs.FilterPrefs
+import edu.miguelangelmoreno.shoppinglistapp.utils.prefs.UserPrefs
+import javax.inject.Inject
 
 @HiltAndroidApp
 class ShoppingListApplication : Application() {
     companion object{
-        lateinit var prefs:Prefs
+        lateinit var userPrefs: UserPrefs
+        lateinit var filterPrefs: FilterPrefs
     }
     override fun onCreate() {
         super.onCreate()
-        prefs = Prefs(applicationContext)
+        userPrefs = UserPrefs(applicationContext)
+        filterPrefs = FilterPrefs(applicationContext)
         checkUserValues()
     }
 
     private fun checkUserValues() {
-        if (prefs.isRemember() && !prefs.getToken().isNullOrEmpty()) {
+        if (userPrefs.isRemember() && !userPrefs.getToken().isNullOrEmpty()) {
             HomeActivity.navigate(applicationContext)
         } else {
-            prefs.clear()
+            userPrefs.clear()
         }
     }
 

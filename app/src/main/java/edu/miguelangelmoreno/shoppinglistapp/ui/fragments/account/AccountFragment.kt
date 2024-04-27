@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import edu.miguelangelmoreno.shoppinglistapp.R
-import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.prefs
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.userPrefs
 import edu.miguelangelmoreno.shoppinglistapp.databinding.FragmentAccountBinding
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import edu.miguelangelmoreno.shoppinglistapp.ui.login.LoginActivity
@@ -51,7 +51,7 @@ class AccountFragment : Fragment() {
 
             }
             btnEndSession.setOnClickListener {
-                prefs.clear()
+                userPrefs.clear()
                 LoginActivity.navigate(requireContext())
                 finishAffinity(requireActivity())
             }
@@ -79,11 +79,11 @@ class AccountFragment : Fragment() {
     }
 
     private fun updatePrefs(user: User) {
-        prefs.updateLoggedUser(user)
+        userPrefs.updateLoggedUser(user)
     }
 
     private fun loadLoggedUser() {
-        logUser = prefs.getLoggedUser()
+        logUser = userPrefs.getLoggedUser()
         with(binding) {
             etName.setText(logUser.name)
             etLastName.setText(logUser.lastName)

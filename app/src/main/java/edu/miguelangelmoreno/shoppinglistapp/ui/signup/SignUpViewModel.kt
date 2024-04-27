@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.miguelangelmoreno.shoppinglistapp.R
-import edu.miguelangelmoreno.shoppinglistapp.data.ShoppingListRepository
+import edu.miguelangelmoreno.shoppinglistapp.data.repository.UserRepository
 import edu.miguelangelmoreno.shoppinglistapp.model.User
-import edu.miguelangelmoreno.shoppinglistapp.ui.fragments.account.AccountState
 import edu.miguelangelmoreno.shoppinglistapp.ui.login.LoginResponse
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateEmail
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateLastName
@@ -23,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val shoppingListRepository: ShoppingListRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _signUpState = MutableStateFlow(SignUpState())
     val signUpState: StateFlow<SignUpState>
@@ -33,7 +32,7 @@ class SignUpViewModel @Inject constructor(
     fun signUp(user: User) {
         viewModelScope.launch {
             _signUpState.value = SignUpState(isLoading = true)
-            val response = shoppingListRepository.createUser(user)
+            val response = userRepository.createUser(user)
             if(response.isSuccessful){
                 _signUpState.value = SignUpState(isSuccessful = response.isSuccessful, isLoading = false)
             }else{

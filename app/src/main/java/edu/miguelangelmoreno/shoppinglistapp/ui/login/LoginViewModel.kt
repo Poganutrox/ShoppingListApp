@@ -4,21 +4,21 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.prefs
-import edu.miguelangelmoreno.shoppinglistapp.data.ShoppingListRepository
+import edu.miguelangelmoreno.shoppinglistapp.R
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.userPrefs
+import edu.miguelangelmoreno.shoppinglistapp.data.repository.UserRepository
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import edu.miguelangelmoreno.shoppinglistapp.utils.validateEmail
 import edu.miguelangelmoreno.shoppinglistapp.utils.validatePassword
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.json.JSONException
-import org.json.JSONObject
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val shoppingListRepository: ShoppingListRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _loginState = MutableStateFlow(LoginState())
     val loginState: StateFlow<LoginState>
@@ -27,25 +27,22 @@ class LoginViewModel @Inject constructor(
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _loginState.value = LoginState(isLoading = true)
-            val response = shoppingListRepository.checkAccess(
+            val response = userRepository.checkAccess(
                 User(email = email, password = password)
             )
 
-            var loginErrorMessage: String? = null
+            var loginErrorMessage : Int? = null
             if (response.isSuccessful) {
                 val user = response.body()
                 if (user != null) {
-                    prefs.saveUser(user)
+                    userPrefs.saveUser(user)
                 }
             } else {
-                val errorBody = response.errorBody()
-                val errorBodyString = errorBody?.string()
-                try {
-                    val errorJson = JSONObject(errorBodyString)
-                    val errorMessage = errorJson.getString("message")
-                    loginErrorMessage = errorMessage
-                } catch (e: JSONException) {
-                    loginErrorMessage = e.message
+                loginErrorMessage = when (response.code()) {
+                    HttpURLConnection.HTTP_NOT_ACCEPTABLE -> R.string.http_invalid_credentials
+                    HttpURLConnection.HTTP_INTERNAL_ERROR -> R.string.http_internal_error
+                    403 -> R.string.http_forbidden
+                    else -> R.string.http_default_error
                 }
             }
             _loginState.value = _loginState.value.copy(
@@ -53,9 +50,14 @@ class LoginViewModel @Inject constructor(
                 isSuccessful = response.isSuccessful,
                 loginErrorMessage = loginErrorMessage
             )
+
+            resetState()
         }
     }
 
+    private fun resetState() {
+        _loginState.value = LoginState()
+    }
     fun isEmailValid(context: Context, email: String) {
         val emailResponse = validateEmail(context, email)
 

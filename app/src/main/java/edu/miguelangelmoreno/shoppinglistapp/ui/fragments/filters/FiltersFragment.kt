@@ -1,7 +1,6 @@
 package edu.miguelangelmoreno.shoppinglistapp.ui.fragments.filters
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -37,33 +36,39 @@ class FiltersFragment : Fragment() {
 
     private fun initComponents() {
         lifecycleScope.launch {
-            vm.currentCategories.collect{ result ->
-                val categories = result.result ?: listOf()
+            vm.currentCategories.collect { result ->
+                if (result.isSuccessful) {
+                    val categories = result.body()
+                    if (categories != null) {
+                        val spinnerAdapter = object : ArrayAdapter<Category>(
+                            binding.root.context,
+                            android.R.layout.simple_spinner_item,
+                            categories
+                        ) {
+                            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                                val view = super.getView(position, convertView, parent)
+                                val category = getItem(position)
+                                view.findViewById<TextView>(android.R.id.text1).text = category?.name
+                                return view
+                            }
 
-                val spinnerAdapter = object : ArrayAdapter<Category>(
-                    binding.root.context,
-                    com.bumptech.glide.R.layout.support_simple_spinner_dropdown_item,
-                    categories
-                ) {
-                    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                        val view = super.getView(position, convertView, parent)
-                        val category = getItem(position)
-                        view.findViewById<TextView>(android.R.id.text1).text = category?.name
-                        return view
-                    }
-
-                    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                        val view = super.getDropDownView(position, convertView, parent)
-                        val category = getItem(position)
-                        view.findViewById<TextView>(android.R.id.text1).text = category?.name
-                        return view
+                            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                                val view = super.getDropDownView(position, convertView, parent)
+                                val category = getItem(position)
+                                view.findViewById<TextView>(android.R.id.text1).text = category?.name
+                                return view
+                            }
+                        }
+                        binding.spinnerCategories.adapter = spinnerAdapter.also {
+                            it.insert(Category(-1, ""), 0)
+                            binding.spinnerCategories.setSelection(0)
+                        }
                     }
                 }
-
-                binding.spinnerCategories.adapter = spinnerAdapter
             }
         }
     }
+
 
     private fun initListeners() {
         var categoryId: Int = -1

@@ -56,6 +56,9 @@
             android:name="consumId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_productsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/salesFragment"
@@ -70,5 +73,14 @@
         <action
             android:id="@+id/action_filtersFragment_to_productsFragment"
             app:destination="@id/productsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.productdetails.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details" >
+        <argument
+            android:name="productId"
+            app:argType="string" />
     </fragment>
 </navigation>

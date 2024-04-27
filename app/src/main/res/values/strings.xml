@@ -51,4 +51,24 @@
     <string name="last_name">apellidos</string>
     <string name="password">contraseña</string>
     <string name="signup_success">Cuenta creada con éxito</string>
+    <string name="http_invalid_credentials">Credenciales no válidas</string>
+
+    <string name="supermarket_mercadona">Mercadona</string>
+    <string name="supermarket_alcampo">Alcampo</string>
+    <string name="supermarket_dia">Dia</string>
+    <string name="supermarket_consum">Consum</string>
+    <string name="filter_sortedBy">Ordenado por</string>
+    <string name="filter_supermarket">Supermercados</string>
+    <string name="filter_category">Categorias</string>
+    <string name="filter_product_name">Nombre del producto</string>
+    <string name="filter_favourite">Favorito</string>
+    <string name="filter_on_sale">En oferta</string>
+    <string name="filter_high_price">Precio Ascendente</string>
+    <string name="filter_low_price">Precio Descendente</string>
+    <string name="filter_a_z">A - Z</string>
+    <string name="filter_z_a">Z - A</string>
+    <string name="filter_apply_filter">APLICAR FILTROS</string>
+    <string name="filter_product_name_hint">Escribe el nombre del producto</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
