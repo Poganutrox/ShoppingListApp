@@ -1,9 +1,14 @@
 package edu.miguelangelmoreno.shoppinglistapp.model
 
+import com.google.gson.annotations.SerializedName
+
 data class User(
-    val name : String,
-    val lastName : String,
-    val phone : String,
-    val email : String,
-    val password : String
+    val token : String? = null,
+    val id : Int? = null,
+    var name : String? = null,
+    var lastName : String? = null,
+    var phone : String? = null,
+    var email : String? = null,
+    val password : String? = null,
+    var favouriteProductsId : MutableSet<String>? = mutableSetOf()
 )

@@ -1,78 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="1dp"
+    android:layout_height="200dp"
+    android:layout_margin="5dp"
     app:cardCornerRadius="10dp"
-    android:layout_margin="5dp">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:id="@+id/productCard">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imgProduct"
-            android:layout_width="120dp"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:padding="5dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
-            tools:srcCompat="@tools:sample/avatars" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imgProduct"
-            android:layout_margin="5dp"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            tools:text="Aceite de oliva"/>
-        <TextView
-            android:id="@+id/tvSize"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textSize="12sp"
+            tools:text="Aceite de oliva" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgProduct"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imgProduct"
+            android:layout_height="120dp"
             android:layout_below="@+id/tvName"
-            android:layout_margin="5dp"
-            tools:text="Aceite de oliva"/>
+            android:layout_alignParentStart="true"
+            android:scaleType="fitXY"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageButton
+            android:id="@+id/imgFav"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/favorite" />
 
         <TextView
             android:id="@+id/tvPrice"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvSize"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@+id/imgProduct"
-            tools:text="Precio: 4,45$" />
-
-        <ImageButton
-            android:id="@+id/imgAdd"
-            android:layout_width="64dp"
-            android:layout_height="59dp"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/imgProduct"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="41dp"
-            android:layout_marginRight="31dp"
+            android:layout_toStartOf="@+id/imgLogo"
             android:layout_toLeftOf="@+id/imgLogo"
-            android:background="#FFFFFF"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_add_product_forground"
-            app:tint="#278129" />
+            android:layout_toEndOf="@+id/imgFav"
+            android:layout_toRightOf="@+id/imgFav"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Precio: 4,45$" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgLogo"
-            android:layout_width="41dp"
-            android:layout_height="34dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-            tools:srcCompat="@mipmap/ic_mercadona_foreground" />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/mercadona_logo" />
 
     </RelativeLayout>
 

@@ -4,20 +4,21 @@ package edu.miguelangelmoreno.shoppinglistapp.model
 import com.google.gson.annotations.SerializedName
 
 data class Product(
-    @SerializedName("currentPrice")
-    val currentPrice: String,
-    @SerializedName("id")
-    val id: Int,
-    @SerializedName("image")
-    val image: String,
-    @SerializedName("name")
+    val id: String,
+    val categoryId : Int,
+    val supermarketId: Int,
     val name: String,
-    @SerializedName("previousPrice")
-    val previousPrice: Any,
-    @SerializedName("size")
-    val size: String,
-    @SerializedName("supermarket")
-    val supermarket: Int,
-    @SerializedName("unit")
-    val unit: String
-)
+    val image: String,
+    val onSale: Boolean,
+    val priceHistories: List<PriceHistory>
+){
+    constructor() : this(
+        id = "",
+        categoryId = -1,
+        supermarketId = -1,
+        name = "",
+        image = "",
+        onSale = false,
+        priceHistories = emptyList()
+    )
+}
