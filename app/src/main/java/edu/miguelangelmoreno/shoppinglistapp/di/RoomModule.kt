@@ -21,7 +21,7 @@ object RoomModule {
         return Room.databaseBuilder(
             context,
             ShoppingListDatabase::class.java,
-            "shoppingList_database"
+            "shoppingList_App_database"
         ).build()
     }
 

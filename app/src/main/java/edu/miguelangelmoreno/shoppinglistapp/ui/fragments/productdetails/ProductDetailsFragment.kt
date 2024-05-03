@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,9 +29,12 @@ import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.databinding.FragmentProductDetailsBinding
 import edu.miguelangelmoreno.shoppinglistapp.model.PriceHistory
 import edu.miguelangelmoreno.shoppinglistapp.model.Product
+import edu.miguelangelmoreno.shoppinglistapp.utils.makeToast
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @AndroidEntryPoint
@@ -58,15 +62,48 @@ class ProductDetailsFragment : Fragment() {
             combine(vm.product, vm.priceHistory) { product, priceHistory ->
                 Pair(product, priceHistory)
             }.collect { (product, priceHistory) ->
-                loadLineChart(product, priceHistory)
+                loadLineChart(priceHistory)
+                initUI(product, priceHistory)
+            }
+        }
+
+    }
+
+    private fun initUI(product: Product, priceHistory: List<PriceHistory>) {
+        priceHistory.takeIf { it.isNotEmpty() }?.let {
+            val lowestPrice = priceHistory.minByOrNull { it.price }
+            val highestPrice = priceHistory.maxByOrNull { it.price }
+            val currentPrice = priceHistory.sortedBy { it.date }[0]
+
+            with(binding) {
+                tvProductName.text = product.name
+                lowestPrice?.let {
+                    this.lowestPrice.text = it.price.toString()
+                    this.dateLowestPrice.text = it.date
+                }
+                highestPrice?.let {
+                    this.highestPrice.text = it.price.toString()
+                    this.dateHighestPrice.text = it.date
+                }
+                currentPrice?.let {
+                    this.currentPrice.text = it.price.toString()
+                    this.dateCurrentPrice.text = it.date
+                }
+
+                numberTimesInList.text = product.timesInList.toString()
+
+                if (product.priceVariation > 0) {
+                    tvPriceVariation.text = getString(R.string.price_variation_higher).format(product.priceVariation)
+                } else if (product.priceVariation < 0) {
+                    tvPriceVariation.text = getString(R.string.price_variation_lower).format(product.priceVariation)
+                }
+
             }
         }
     }
 
-
-    private fun loadLineChart(product:Product, priceHistory: List<PriceHistory>) {
+    private fun loadLineChart(priceHistory: List<PriceHistory>) {
         val dates = priceHistory.map { it.date }
-
         with(binding.lcPrices) {
             description.isEnabled = false
             axisRight.isEnabled = false
@@ -75,6 +112,7 @@ class ProductDetailsFragment : Fragment() {
             xAxis.valueFormatter = IndexAxisValueFormatter(dates)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawLabels(true)
+            xAxis.textColor = ContextCompat.getColor(context, R.color.white)
             xAxis.labelRotationAngle = -45f
             xAxis.granularity = 1f
 
@@ -83,27 +121,21 @@ class ProductDetailsFragment : Fragment() {
                 entries.add(Entry(index.toFloat(), history.price.toFloat()))
             }
 
-            val dataSet = LineDataSet(entries, "Precio €")
+            val dataSet = LineDataSet(entries, null)
             dataSet.setDrawCircles(true)
-            dataSet.setCircleColor(ContextCompat.getColor(context, R.color.md_theme_light_primary))
+            dataSet.setCircleColor(ContextCompat.getColor(context, R.color.white))
             dataSet.circleRadius = 3f
             dataSet.setDrawValues(false)
             dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
             dataSet.setDrawFilled(true)
-            dataSet.fillColor = ContextCompat.getColor(context, R.color.md_theme_light_primary)
+            dataSet.fillColor = ContextCompat.getColor(context, R.color.white)
             dataSet.fillAlpha = 50
 
             val lineData = LineData(dataSet)
             data = lineData
-            Log.i("Precio máximo",data.yMax.toString())
-            Log.i("Precio mínimo",data.yMin.toString())
             invalidate()
         }
     }
-
-
-
-
 
     private fun getClickedProduct() {
         vm.getClickedProduct(args.productId)

@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0019FF</color>
     <color name="color_fav">#FF0000</color>
     <color name="seed">#00a74b</color>
     <color name="md_theme_light_primary">#006E2F</color>
@@ -65,4 +66,13 @@
     <color name="md_theme_dark_surfaceTint">#59E07C</color>
     <color name="md_theme_dark_outlineVariant">#414941</color>
     <color name="md_theme_dark_scrim">#000000</color>
+    <color name="green">#2AE400</color>
+    <color name="red">#F51100</color>
+
+    <color name="cardColor_1">#FFD1DC</color>
+    <color name="cardColor_2">#FFDAB9</color>
+    <color name="cardColor_3">#B0E0E6</color>
+    <color name="cardColor_4">#98FB98</color>
+    <color name="cardColor_5">#FFB6C1</color>
+    <color name="cardColor_6">#FFDEAD</color>
 </resources>

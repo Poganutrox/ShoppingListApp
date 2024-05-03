@@ -2,33 +2,15 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/productCard"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:layout_margin="5dp"
     app:cardCornerRadius="10dp"
-    app:cardElevation="8dp">
+    android:id="@+id/productCard">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
-
-        <TextView
-            android:id="@+id/tvQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:background="@color/red"
-            android:padding="3dp"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            tools:text="3"
-            android:elevation="2dp"
-            android:textStyle="bold"
-            android:visibility="invisible"/>
-
 
         <TextView
             android:id="@+id/tvName"
@@ -39,9 +21,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
-            android:elevation="3dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
             android:maxLines="2"
             android:textSize="12sp"
@@ -53,7 +33,6 @@
             android:layout_height="120dp"
             android:layout_below="@+id/tvName"
             android:layout_alignParentStart="true"
-            android:elevation="1dp"
             android:scaleType="fitXY"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
             tools:srcCompat="@tools:sample/avatars" />
@@ -77,7 +56,6 @@
             android:layout_toLeftOf="@+id/imgLogo"
             android:layout_toEndOf="@+id/imgFav"
             android:layout_toRightOf="@+id/imgFav"
-            android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
             android:textSize="14sp"
             android:textStyle="bold"

@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import edu.miguelangelmoreno.shoppinglistapp.entity.PriceHistoryEntity
 import edu.miguelangelmoreno.shoppinglistapp.entity.ProductEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShoppingListDAO {
@@ -29,11 +30,17 @@ interface ShoppingListDAO {
 
     @Insert(entity = ProductEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProducts(products: List<ProductEntity>)
+    @Insert(entity = ProductEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveProduct(product: ProductEntity)
     @Transaction
     @Query("DELETE FROM product")
     suspend fun clearAllProducts()
 
     @Query("SELECT COUNT(*) FROM product")
     suspend fun countAllProducts() : Int
+
+    @Transaction
+    @Query("SELECT * FROM product WHERE isFavourite = 1")
+    fun getAllFavourites() : Flow<List<ProductEntity>>
 
 }

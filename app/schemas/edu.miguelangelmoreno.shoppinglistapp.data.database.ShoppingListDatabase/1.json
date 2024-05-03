@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "17b8fd62bf64a2cb29227c611a290294",
+    "identityHash": "e2be488f8eb1c3bceb121bfda97749bc",
     "entities": [
       {
         "tableName": "price_history",
@@ -51,7 +51,7 @@
       },
       {
         "tableName": "product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `category_id` INTEGER NOT NULL, `supermarket_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `onSale` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `category_id` INTEGER NOT NULL, `supermarket_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `onSale` INTEGER NOT NULL, `isFavourite` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -88,6 +88,12 @@
             "columnName": "onSale",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "isFavourite",
+            "columnName": "isFavourite",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -103,7 +109,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '17b8fd62bf64a2cb29227c611a290294')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e2be488f8eb1c3bceb121bfda97749bc')"
     ]
   }
 }
