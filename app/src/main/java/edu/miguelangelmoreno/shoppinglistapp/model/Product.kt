@@ -2,6 +2,7 @@ package edu.miguelangelmoreno.shoppinglistapp.model
 
 
 import com.google.gson.annotations.SerializedName
+import java.math.BigDecimal
 
 data class Product(
     val id: String,
@@ -10,7 +11,10 @@ data class Product(
     val name: String,
     val image: String,
     val onSale: Boolean,
-    val priceHistories: List<PriceHistory>
+    var priceHistories: List<PriceHistory>,
+    var isFavourite : Boolean,
+    var timesInList :  Long,
+    var priceVariation : Double
 ){
     constructor() : this(
         id = "",
@@ -19,6 +23,9 @@ data class Product(
         name = "",
         image = "",
         onSale = false,
+        isFavourite = false,
+        priceVariation = 0.0,
+        timesInList = 0,
         priceHistories = emptyList()
     )
 }

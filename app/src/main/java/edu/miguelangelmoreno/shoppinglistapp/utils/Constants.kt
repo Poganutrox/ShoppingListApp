@@ -14,10 +14,10 @@ class Constants {
         const val SHARE_USER_PHONE : String = "userPhone"
         const val SHARE_USER_FAVOURITES : String = "userFavourites"
 
-        const val PREFS_FILTER_DATA : String = "FiltersDB"
-        const val SHARE_FILTER_PRODUCT_NAME : String = "productName"
-        const val SHARE_FILTER_CATEGORY_ID : String = "categoryId"
-        const val SHARE_FILTER_SUPERMARKET_IDS : String = "supermarketIds"
-        const val SHARE_FILTER_ON_SALE : String = "onSale"
+        const val PREFS_ADD_DATA : String = "AddProductsDB"
+        const val PREFS_LIST_NAME : String = "listName"
+        const val PREFS_LIST_ID : String = "listId"
+        const val PREFS_ADDING_DATA : String = "AddingProductsDB"
+        const val SHARE_ADDING_PRODUCTS : String = "isAdding"
     }
 }

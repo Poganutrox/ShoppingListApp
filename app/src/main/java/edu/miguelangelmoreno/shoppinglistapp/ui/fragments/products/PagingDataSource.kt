@@ -1,13 +1,11 @@
-package edu.miguelangelmoreno.shoppinglistapp.data.datasource
+package edu.miguelangelmoreno.shoppinglistapp.ui.fragments.products
 
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.room.withTransaction
-import edu.miguelangelmoreno.shoppinglistapp.data.database.ShoppingListDatabase
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.userPrefs
 import edu.miguelangelmoreno.shoppinglistapp.data.repository.PriceHistoryRepository
 import edu.miguelangelmoreno.shoppinglistapp.data.repository.ProductRepository
-import edu.miguelangelmoreno.shoppinglistapp.data.service.ShoppingListDAO
 import edu.miguelangelmoreno.shoppinglistapp.entity.PriceHistoryEntity
 import edu.miguelangelmoreno.shoppinglistapp.model.Product
 import edu.miguelangelmoreno.shoppinglistapp.utils.mappers.toPriceHistoryEntity
@@ -22,6 +20,7 @@ class PagingDataSource(
     private val onSale: Boolean
 ) :
     PagingSource<Int, Product>() {
+        private val userFavourites = userPrefs.getLoggedUser().favouriteProductsId
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         return try {
             val page = params.key ?: 0
@@ -33,10 +32,10 @@ class PagingDataSource(
             val dbCount = productRepository.countAllProductsFromDB()
             Log.i("Count", dbCount.toString())
 
-            if (page == 0 && dbCount > 0) {
+            /*if (page == 0 && dbCount > 0) {
                 productRepository.clearAllProductsFromDB()
                 priceHistoryRepository.clearAll()
-            }
+            }*/
 
             var priceHistoryEntityList = mutableListOf<PriceHistoryEntity>()
             data.forEach { product ->
@@ -47,7 +46,10 @@ class PagingDataSource(
             }
 
             priceHistoryRepository.insertPrices(priceHistoryEntityList)
-            productRepository.insertProductsInDB(data.map { it.toProductEntity() })
+            productRepository.insertProductsInDB(data.map {
+                it.isFavourite = userFavourites?.contains(it.id) == true
+                it.toProductEntity()
+            })
 
 
             LoadResult.Page(
@@ -67,4 +69,3 @@ class PagingDataSource(
         }
     }
 }
-

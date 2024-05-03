@@ -2,22 +2,20 @@ package edu.miguelangelmoreno.shoppinglistapp
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import edu.miguelangelmoreno.shoppinglistapp.data.database.ShoppingListDatabase
 import edu.miguelangelmoreno.shoppinglistapp.ui.home.HomeActivity
-import edu.miguelangelmoreno.shoppinglistapp.utils.prefs.FilterPrefs
+import edu.miguelangelmoreno.shoppinglistapp.utils.prefs.AddPrefs
 import edu.miguelangelmoreno.shoppinglistapp.utils.prefs.UserPrefs
-import javax.inject.Inject
 
 @HiltAndroidApp
 class ShoppingListApplication : Application() {
     companion object{
         lateinit var userPrefs: UserPrefs
-        lateinit var filterPrefs: FilterPrefs
+        lateinit var addPrefs: AddPrefs
     }
     override fun onCreate() {
         super.onCreate()
         userPrefs = UserPrefs(applicationContext)
-        filterPrefs = FilterPrefs(applicationContext)
+        addPrefs = AddPrefs(applicationContext)
         checkUserValues()
     }
 

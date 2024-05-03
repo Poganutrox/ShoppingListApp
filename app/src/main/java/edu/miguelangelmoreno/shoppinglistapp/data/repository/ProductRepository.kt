@@ -18,7 +18,6 @@ class ProductRepository @Inject constructor(
     private val dataSource: APIDataSource,
     private val dao : ShoppingListDAO
 ) {
-    suspend fun getProductById(productId: String): Response<Product> = dataSource.getProductById(productId)
     suspend fun fetchProducts(
         page: Int, pageSize : Int, productName: String?, categoryId: Int?,
         supermarketIds: Set<Int>?, onSale: Boolean?
@@ -27,6 +26,9 @@ class ProductRepository @Inject constructor(
 
     suspend fun getProductByIdFromDB(productId: String): ProductEntity = dao.getProductById(productId)
 
+    suspend fun saveProductInDB(product: ProductEntity) {
+        dao.saveProduct(product)
+    }
     suspend fun insertProductsInDB(products: List<ProductEntity>){
         dao.insertProducts(products)
     }
@@ -35,6 +37,23 @@ class ProductRepository @Inject constructor(
         dao.clearAllProducts()
     }
     suspend fun countAllProductsFromDB() = dao.countAllProducts()
+
+    suspend fun getTimesProductAddedList(productId: String, userId: Int) =
+        dataSource.getTimesProductAddedList(productId, userId)
+
+    suspend fun getPriceVariation(
+        productId: String,
+        userId: Int
+    ) = dataSource.getPriceVariation(productId, userId)
+
+    suspend fun setProductFavourite(
+        productId: String,
+        userId: Int
+    ) = dataSource.setProductFavourite(productId, userId)
+
+    suspend fun getFavouriteProduct(
+        userId: Int
+    ) = dataSource.getFavouriteProduct(userId)
 
 
 }

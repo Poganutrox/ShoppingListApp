@@ -14,5 +14,6 @@ data class ProductEntity (
     val supermarketId: Int,
     val name: String,
     val image: String,
-    val onSale: Boolean
+    val onSale: Boolean,
+    var isFavourite : Boolean
 )
