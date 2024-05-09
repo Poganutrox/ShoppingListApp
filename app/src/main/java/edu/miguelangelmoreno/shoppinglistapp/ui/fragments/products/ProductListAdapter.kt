@@ -20,7 +20,7 @@ import edu.miguelangelmoreno.shoppinglistapp.model.Product
 import edu.miguelangelmoreno.shoppinglistapp.model.Supermarkets.*
 
 class ProductListAdapter(
-    private val onClickFav: (productId: String) -> Unit,
+    private val onClickFav: (productId: String, position : Int) -> Unit,
     private val onLongClickDetailView: (productId: String) -> Unit,
     private val onClickAskQuantity: (productId: String, position: Int) -> Unit
 ) : PagingDataAdapter<Product, ProductListAdapter.ProductListViewHolder>(ProductsDiffCallback()) {
@@ -48,7 +48,7 @@ class ProductListAdapter(
                 val position = layoutPosition
                 if (position != RecyclerView.NO_POSITION) {
                     imgFav.setOnClickListener {
-                        onClickFav(product.id)
+                        onClickFav(product.id, position)
                     }
                 }
 

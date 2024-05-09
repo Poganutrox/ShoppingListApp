@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -13,7 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.addPrefs
@@ -32,7 +36,7 @@ import java.time.LocalDate
 class AddProductFragment : Fragment() {
     private lateinit var binding: FragmentAddProductBinding
     private val vm: AddProductViewModel by viewModels()
-    private val args : AddProductFragmentArgs by navArgs()
+    private val args: AddProductFragmentArgs by navArgs()
     private lateinit var adapter: ChildAdapter
 
     override fun onCreateView(
@@ -53,14 +57,18 @@ class AddProductFragment : Fragment() {
         observeStateChanges()
     }
 
-    private fun initUI(){
-        binding.tvListTitle.setText( args.name)
-        if(args.id != null && args.id != -1){
-            binding.btnSaveList.text = "Modificar lista"
-        }else{
-            binding.btnSaveList.text = "Añadir lista"
+    private fun initUI() {
+        if (!args.name.isNullOrEmpty()) {
+            binding.tvListTitle.setText(args.name)
+        }
+
+        if (args.id != null && args.id != -1) {
+            binding.btnSaveList.text = getString(R.string.modify_list)
+        } else {
+            binding.btnSaveList.text = getString(R.string.add_list)
         }
     }
+
     private fun observeListChanges() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -78,7 +86,18 @@ class AddProductFragment : Fragment() {
                     binding.progressBar.isVisible = state.isLoading
                     if (state.isReceived) {
                         if (state.isSuccess) {
-                            makeToast(requireContext(), getString(R.string.shopping_list_created))
+                            if (args.id != null && args.id != -1) {
+                                makeToast(
+                                    requireContext(),
+                                    getString(R.string.shopping_list_modified)
+                                )
+                            } else {
+                                makeToast(
+                                    requireContext(),
+                                    getString(R.string.shopping_list_created)
+                                )
+                            }
+
                             addPrefs.setIsAdding(false)
                             addPrefs.clear()
                             findNavController().navigate(R.id.homeFragment)
@@ -110,7 +129,6 @@ class AddProductFragment : Fragment() {
         binding.btnAddItem.setOnClickListener {
             addPrefs.setIsAdding(true)
             findNavController().navigate(R.id.action_addProductFragment_to_productsFragment)
-
         }
 
         binding.btnSaveList.setOnClickListener {
@@ -118,9 +136,23 @@ class AddProductFragment : Fragment() {
             val name = binding.tvListTitle.text.toString()
             val creatorUser = userPrefs.getUserId()
             val shoppingListProduct = addPrefs.getAllProductList()
-            val shoppingListDTO =
-                ShoppingListDTO(id, name, creatorUser!!, true, shoppingListProduct, listOf(creatorUser))
-            vm.saveShoppingList(shoppingListDTO)
+
+            if (name.isNullOrEmpty()) {
+                binding.tvListTitle.error = getString(R.string.error_list_name)
+            } else if (shoppingListProduct.isNullOrEmpty()) {
+                makeToast(requireContext(), getString(R.string.error_empty_shopping_list))
+            } else {
+                val shoppingListDTO =
+                    ShoppingListDTO(
+                        id,
+                        name,
+                        creatorUser!!,
+                        true,
+                        shoppingListProduct,
+                        listOf(creatorUser)
+                    )
+                vm.saveShoppingList(shoppingListDTO)
+            }
         }
     }
 }

@@ -20,8 +20,9 @@ class ProductRepository @Inject constructor(
 ) {
     suspend fun fetchProducts(
         page: Int, pageSize : Int, productName: String?, categoryId: Int?,
-        supermarketIds: Set<Int>?, onSale: Boolean?
-    ) = dataSource.getProducts(page,pageSize, productName, categoryId, supermarketIds, onSale)
+        supermarketIds: Set<Int>?, onSale: Boolean?,alphabeticSort: Int?,
+        priceSort: Int?
+    ) = dataSource.getProducts(page,pageSize, productName, categoryId, supermarketIds, onSale, alphabeticSort, priceSort)
 
 
     suspend fun getProductByIdFromDB(productId: String): ProductEntity = dao.getProductById(productId)

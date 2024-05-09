@@ -11,5 +11,19 @@ class ShoppingListRepository @Inject constructor(
     private val dataSource: APIDataSource
 ) {
     suspend fun getUserShoppingLists(userId: Int) = dataSource.getUserShoppingLists(userId)
-    suspend fun saveShoppingList(shoppingListDTO : ShoppingListDTO) =  dataSource.saveShoppingList(shoppingListDTO)
+    suspend fun saveShoppingList(shoppingListDTO: ShoppingListDTO) =
+        dataSource.saveShoppingList(shoppingListDTO)
+
+    suspend fun importShoppingList(applicantUserId: Int, uniqueCode: String) =
+        dataSource.importShoppingList(applicantUserId, uniqueCode)
+
+    suspend fun updateShoppingList(
+        shoppingListDTO: ShoppingListDTO
+    ) = dataSource.updateShoppingList(shoppingListDTO)
+
+    suspend fun deleteShoppingList(shoppingListId: Int, userId: Int) =
+        dataSource.deleteShoppingList(shoppingListId, userId)
+
+    suspend fun removeChanges(shoppingListId: Int, userId: Int) =
+        dataSource.removeChanges(shoppingListId, userId)
 }

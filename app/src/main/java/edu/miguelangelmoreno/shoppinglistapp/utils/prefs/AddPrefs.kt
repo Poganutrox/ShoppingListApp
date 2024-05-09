@@ -36,6 +36,12 @@ class AddPrefs(context: Context) {
         isAddingStorage.edit().putBoolean(SHARE_ADDING_PRODUCTS, isAdding).apply()
     }
 
+    fun setAddingMode(shoppingList: ShoppingList){
+        clear()
+        setIsAdding(true)
+        setProductList(shoppingList)
+    }
+
     fun addProductToList(productId: String, quantity: Int) {
         if (quantity == 0) {
             storage.edit().remove(productId).apply()

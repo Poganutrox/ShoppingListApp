@@ -7,6 +7,7 @@ import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.a
 import edu.miguelangelmoreno.shoppinglistapp.data.repository.PriceHistoryRepository
 import edu.miguelangelmoreno.shoppinglistapp.data.repository.ProductRepository
 import edu.miguelangelmoreno.shoppinglistapp.data.repository.ShoppingListRepository
+import edu.miguelangelmoreno.shoppinglistapp.model.ShoppingList
 import edu.miguelangelmoreno.shoppinglistapp.model.ShoppingListDTO
 import edu.miguelangelmoreno.shoppinglistapp.model.ShoppingListProduct
 import edu.miguelangelmoreno.shoppinglistapp.utils.mappers.toPriceHistory
@@ -14,13 +15,14 @@ import edu.miguelangelmoreno.shoppinglistapp.utils.mappers.toProduct
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.Response
 import javax.inject.Inject
 
 @HiltViewModel
 class AddProductViewModel @Inject constructor(
     private val shoppingListRepo: ShoppingListRepository,
     private val productRepo: ProductRepository,
-    private val priceRepo : PriceHistoryRepository
+    private val priceRepo: PriceHistoryRepository
 ) : ViewModel() {
     private var _shoppingProductList = MutableStateFlow(listOf<ShoppingListProduct>())
     val shoppingProductList: StateFlow<List<ShoppingListProduct>>
@@ -45,13 +47,18 @@ class AddProductViewModel @Inject constructor(
         }
     }
 
-    fun saveShoppingList(shoppingList : ShoppingListDTO){
+    fun saveShoppingList(shoppingList: ShoppingListDTO) {
         viewModelScope.launch {
             _addProductState.value = AddProductState(isLoading = true)
-            val response = shoppingListRepo.saveShoppingList(shoppingList)
-            if(response.isSuccessful){
+            val response = if (shoppingList.id == null || shoppingList.id == -1) {
+                shoppingListRepo.saveShoppingList(shoppingList)
+            } else {
+                shoppingListRepo.updateShoppingList(shoppingList)
+            }
+
+            if (response.isSuccessful) {
                 _addProductState.value = AddProductState(isReceived = true, isSuccess = true)
-            }else{
+            } else {
                 _addProductState.value = AddProductState(isReceived = true, isSuccess = false)
             }
 

@@ -8,6 +8,7 @@ import edu.miguelangelmoreno.shoppinglistapp.model.User
 import edu.miguelangelmoreno.shoppinglistapp.model.responses.PageResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -36,6 +37,8 @@ interface APIService {
         @Query("categoryId") categoryId: Int?,
         @Query("supermarketIds") supermarketIds: Set<Int>?,
         @Query("onSale") onSale: Boolean?,
+        @Query("alphabeticSort") alphabeticSort: Int?,
+        @Query("priceSort") priceSort: Int?
     ): PageResponse<Product>
 
     @GET("category")
@@ -73,5 +76,27 @@ interface APIService {
     suspend fun saveShoppingList(
         @Body shoppingListDTO: ShoppingListDTO
     ) : Response<ShoppingList>
+
+    @PUT("shoppingList/update")
+    suspend fun updateShoppingList(
+        @Body shoppingListDTO: ShoppingListDTO
+    ) : Response<ShoppingList>
+    @GET("shoppingList/import")
+    suspend fun importShoppingList(
+        @Query("applicantUserId") applicantUserId: Int,
+        @Query("uniqueCode") uniqueCode: String
+    ): Response<String>
+
+    @DELETE("shoppingList/delete")
+    suspend fun deleteShoppingList(
+        @Query("shoppingListId") shoppingListId: Int,
+        @Query("userId") userId: Int
+    ): Response<Boolean>
+
+    @GET("shoppingList/removeChanges")
+    suspend fun removeChanges(
+        @Query("shoppingListId") shoppingListId: Int,
+        @Query("userId") userId: Int
+    ): Response<Boolean>
 
 }

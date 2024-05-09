@@ -25,6 +25,8 @@ class ProductsViewModel @Inject constructor(
     private var categoryId: Int? = null
     private var supermarketIds: Set<Int>? = null
     private var onSale: Boolean = false
+    private var alphabeticSort: Int? = null
+    private var priceSort: Int? = null
     private val loggedUser = userPrefs.getLoggedUser()
 
     private var _productList = Pager(
@@ -40,7 +42,9 @@ class ProductsViewModel @Inject constructor(
             productName,
             categoryId,
             supermarketIds,
-            onSale
+            onSale,
+            alphabeticSort,
+            priceSort
         )
     }.flow.cachedIn(viewModelScope)
 
@@ -52,12 +56,16 @@ class ProductsViewModel @Inject constructor(
         productName: String?,
         categoryId: Int?,
         supermarketIds: Set<Int>?,
-        onSale: Boolean
+        onSale: Boolean,
+        alphabeticSort: Int?,
+        priceSort: Int?
     ) {
         this.categoryId = if (categoryId == -1) null else categoryId
         this.productName = if (productName.isNullOrBlank()) null else productName
         this.supermarketIds = if (supermarketIds?.isEmpty() == true) null else supermarketIds
         this.onSale = onSale
+        this.alphabeticSort = alphabeticSort
+        this.priceSort = priceSort
     }
 
 

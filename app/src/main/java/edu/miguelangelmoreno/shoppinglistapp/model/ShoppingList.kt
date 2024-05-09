@@ -9,7 +9,8 @@ data class ShoppingList(
     val name: String? = null,
     val creationDate: String? = null,
     val status: Boolean? = null,
+    val uniqueShareCode: String? = null,
     val users: Set<User>? = null,
     @SerializedName("shoppinglistProducts")
-    var shoppingListProducts : List<ShoppingListProduct>? = null
+    var shoppingListProducts: List<ShoppingListProduct>? = null
 )

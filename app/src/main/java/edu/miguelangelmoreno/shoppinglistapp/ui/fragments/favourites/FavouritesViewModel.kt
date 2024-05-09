@@ -74,6 +74,7 @@ class FavouritesViewModel @Inject constructor(
                 product.isFavourite = !product.isFavourite
                 productRepo.saveProductInDB(product)
             }
+            getFavouriteList()
         }
     }
 

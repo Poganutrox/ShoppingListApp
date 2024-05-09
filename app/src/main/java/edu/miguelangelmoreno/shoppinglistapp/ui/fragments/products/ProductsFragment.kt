@@ -71,13 +71,13 @@ class ProductsFragment : Fragment() {
         }
     }
 
-    private fun getProducts(isRefreshing : Boolean = false) {
+    private fun getProducts(isRefreshing: Boolean = false) {
         if (!checkConnection(requireContext())) {
             makeToast(requireContext(), "No connection")
         } else {
-            if(isRefreshing){
-                vm.setFilters(null, null, null, false)
-            }else{
+            if (isRefreshing) {
+                vm.setFilters(null, null, null, false, null, null)
+            } else {
                 setFilters()
             }
 
@@ -92,8 +92,10 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setFilters() {
-        var productName: String? = if (args.productName.isNullOrEmpty()) null else args.productName
-        var categoryId: Int? = if (args.categoryId == -1) null else args.categoryId
+        val productName: String? = if (args.productName.isNullOrEmpty()) null else args.productName
+        val categoryId: Int? = if (args.categoryId == -1) null else args.categoryId
+        val alphabeticSort: Int? = if (args.alphabeticSort == -1) null else args.alphabeticSort
+        val priceSort: Int? = if (args.priceSort == -1) null else args.priceSort
         val onSale = args.onSale
         val supermarketIds = mutableSetOf<Int>()
         if (args.mercadonaId != -1) supermarketIds.add(args.mercadonaId)
@@ -101,7 +103,7 @@ class ProductsFragment : Fragment() {
         if (args.consumId != -1) supermarketIds.add(args.consumId)
         if (args.alcampoId != -1) supermarketIds.add(args.alcampoId)
 
-        vm.setFilters(productName, categoryId, supermarketIds, onSale)
+        vm.setFilters(productName, categoryId, supermarketIds, onSale, alphabeticSort, priceSort)
     }
 
     private fun initRecyclerView() {
@@ -111,8 +113,9 @@ class ProductsFragment : Fragment() {
                     showQuantityDialog(productId, position)
                 }
             },
-            onClickFav = { productId ->
+            onClickFav = { productId, position ->
                 vm.likeProduct(productId)
+                adapter.notifyItemChanged(position)
             },
             onLongClickDetailView = { productId ->
                 findNavController().navigate(
@@ -135,10 +138,10 @@ class ProductsFragment : Fragment() {
 
         builder.setPositiveButton("Aceptar") { _, _ ->
             val quantity = input.text.toString().toIntOrNull()
-            if(quantity == null){
+            if (quantity == null) {
                 addPrefs.addProductToList(productId, 0)
                 adapter.notifyItemChanged(position)
-            }else if (quantity != null && quantity >= 0){
+            } else if (quantity >= 0) {
                 addPrefs.addProductToList(productId, quantity)
                 adapter.notifyItemChanged(position)
             }

@@ -66,16 +66,6 @@
                 android:text="Guardar lista"
                 android:layout_marginStart="30dp"/>
         </LinearLayout>
-
-
-
-        <TextView
-            android:id="@+id/tvCreationDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="left"
-            tools:text="Creada: 30/04/2024" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

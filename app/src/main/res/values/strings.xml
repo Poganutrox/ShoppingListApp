@@ -28,6 +28,8 @@
     <string name="error_empty_feminine">La %s no puede estar vacía</string>
     <string name="error_format">Formato del %s no válido</string>
     <string name="error_password_too_short">La contraseña debe contener al menos 6 caracteres</string>
+    <string name="error_list_name">La lista debe tener un título</string>
+    <string name="error_empty_shopping_list">No se pueden añadir listas vacías</string>
 
     <string name="http_bad_request">Algunos campos requeridos están vacíos</string>
     <string name="http_not_found">Usuario no encontrado</string>
@@ -69,10 +71,22 @@
     <string name="filter_z_a">Z - A</string>
     <string name="filter_apply_filter">APLICAR FILTROS</string>
     <string name="filter_product_name_hint">Escribe el nombre del producto</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="price_variation_higher">El precio ha aumentado %.2f%% desde la última vez que lo añadiste a tus listas</string>
     <string name="price_variation_lower">¡APROVECHA! El precio ha disminuido %.2f%% desde la última vez que lo añadiste a tus listas</string>
     <string name="shopping_list_created">¡Lista de la compra creada!</string>
     <string name="error_creating_shopping_list">No se ha podido guardar la lista correctamente. Inténtelo más tarde</string>
+    <string name="import_existing_list">Importar</string>
+    <string name="add_new_list">Añadir</string>
+    <string name="product_quantity">Cantidad</string>
+    <string name="product_price">Precio</string>
+    <string name="explanation_import_list">Pide el código de la lista al creador para poder importarla y disfrutar de ella tú también. Después, cópialo y pégalo en este recuadro.</string>
+    <string name="hint_write_code">Escribe aquí el código de la lista</string>
+
+    <string name="modify_list">Modificar lista</string>
+    <string name="add_list">Añadir lista</string>
+    <string name="shopping_list_modified">¡Lista de la compra modificada!</string>
+    <string name="total_price">Precio total: %.2f€</string>
+    <string name="shopping_list_created_at">Creada: %s</string>
+    <string name="friend_share_code">Código amigo: %s</string>
 </resources>

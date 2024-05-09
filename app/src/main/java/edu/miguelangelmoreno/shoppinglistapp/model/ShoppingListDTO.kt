@@ -5,6 +5,6 @@ data class ShoppingListDTO(
     val name : String,
     val creatorUserId : Int,
     val status : Boolean,
-    val shoppingListProducts : Map<String, Int>,
-    val users : List<Int>
+    val shoppingListProducts : Map<String, Int>? = null,
+    val users : List<Int>? = null
 )

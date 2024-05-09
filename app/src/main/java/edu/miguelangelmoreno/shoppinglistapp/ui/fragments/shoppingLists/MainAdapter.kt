@@ -4,16 +4,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.qualifiers.ApplicationContext
 import edu.miguelangelmoreno.shoppinglistapp.R
+import edu.miguelangelmoreno.shoppinglistapp.ShoppingListApplication.Companion.userPrefs
 import edu.miguelangelmoreno.shoppinglistapp.databinding.NoteItemBinding
 import edu.miguelangelmoreno.shoppinglistapp.model.ShoppingList
 
-class MainAdapter ( private val onClickEdit : (shoppingList : ShoppingList) -> Unit) : ListAdapter<ShoppingList, MainAdapter.MainViewHolder>(
-    MainDiffCallback()
-) {
+class MainAdapter :
+    ListAdapter<ShoppingList, MainAdapter.MainViewHolder>(
+        MainDiffCallback()
+    ) {
+    private val userId = userPrefs.getUserId()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainAdapter.MainViewHolder {
         return MainViewHolder(
             NoteItemBinding.inflate(
@@ -26,25 +31,37 @@ class MainAdapter ( private val onClickEdit : (shoppingList : ShoppingList) -> U
 
     override fun onBindViewHolder(holder: MainAdapter.MainViewHolder, position: Int) {
         holder.bind(getItem(position))
-
-
     }
 
     inner class MainViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val binding: NoteItemBinding = NoteItemBinding.bind(view)
         fun bind(shoppingList: ShoppingList) {
             val childAdapter = ChildAdapter(
-                onClickDelete = { _, _ ->}
+                onClickDelete = { _, _ -> }
             )
             childAdapter.submitList(shoppingList.shoppingListProducts)
             with(binding) {
                 val randomColor = getRandomColor()
                 cardShoppingList.setCardBackgroundColor(view.context.resources.getColor(randomColor))
                 tvListTitle.text = shoppingList.name
-                tvCreationDate.text = shoppingList.creationDate
+                tvCreationDate.text =
+                    view.context.getString(
+                        R.string.shopping_list_created_at,
+                        shoppingList.creationDate
+                    )
+                val finalCost = shoppingList.shoppingListProducts?.sumOf { shoppingListProduct ->
+                    shoppingListProduct.product.priceHistories.first().price * shoppingListProduct.quantity
+                }
+                tvFinalPrice.text = view.context.getString(R.string.total_price, finalCost)
 
-                cardShoppingList.setOnClickListener { onClickEdit(shoppingList) }
-                productList.setOnClickListener { onClickEdit(shoppingList) }
+                if (shoppingList.creatorUser?.id == userId) {
+                    if (shoppingList.uniqueShareCode != null) {
+                        tvUniqueShareCode.text = view.context.getString(
+                            R.string.friend_share_code,
+                            shoppingList.uniqueShareCode
+                        )
+                    }
+                }
 
                 productList.layoutManager =
                     LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
@@ -53,7 +70,7 @@ class MainAdapter ( private val onClickEdit : (shoppingList : ShoppingList) -> U
         }
     }
 
-    private fun getRandomColor() : Int{
+    private fun getRandomColor(): Int {
         val shoppingListColors: List<Int> = listOf(
             R.color.cardColor_1,
             R.color.cardColor_2,

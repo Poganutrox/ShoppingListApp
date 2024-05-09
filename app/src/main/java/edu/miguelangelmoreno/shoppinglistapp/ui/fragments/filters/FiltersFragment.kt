@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import edu.miguelangelmoreno.shoppinglistapp.R
 import edu.miguelangelmoreno.shoppinglistapp.databinding.FragmentFiltersBinding
 import edu.miguelangelmoreno.shoppinglistapp.model.Category
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ class FiltersFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFiltersBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,17 +48,27 @@ class FiltersFragment : Fragment() {
                             android.R.layout.simple_spinner_item,
                             categories
                         ) {
-                            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            override fun getView(
+                                position: Int,
+                                convertView: View?,
+                                parent: ViewGroup
+                            ): View {
                                 val view = super.getView(position, convertView, parent)
                                 val category = getItem(position)
-                                view.findViewById<TextView>(android.R.id.text1).text = category?.name
+                                view.findViewById<TextView>(android.R.id.text1).text =
+                                    category?.name
                                 return view
                             }
 
-                            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            override fun getDropDownView(
+                                position: Int,
+                                convertView: View?,
+                                parent: ViewGroup
+                            ): View {
                                 val view = super.getDropDownView(position, convertView, parent)
                                 val category = getItem(position)
-                                view.findViewById<TextView>(android.R.id.text1).text = category?.name
+                                view.findViewById<TextView>(android.R.id.text1).text =
+                                    category?.name
                                 return view
                             }
                         }
@@ -76,55 +89,102 @@ class FiltersFragment : Fragment() {
         var diaId = -1
         var consumId = -1
         var alcampoId = -1
+        var priceSort = -1
+        var alphabeticSort = -1
+        var onSale = false
 
-        binding.chipMercadona.setOnCheckedChangeListener { _, isChecked ->
-            when(isChecked){
-                true -> mercadonaId = 1
-                else -> mercadonaId = -1
-            }
-        }
-        binding.chipDia.setOnCheckedChangeListener { _, isChecked ->
-
-            when(isChecked){
-                true -> diaId = 2
-                else -> diaId = -1
-            }
-        }
-        binding.chipConsum.setOnCheckedChangeListener { _, isChecked ->
-
-            when(isChecked){
-                true -> consumId = 4
-                else -> consumId = -1
-            }
-        }
-        binding.chipAlcampo.setOnCheckedChangeListener { _, isChecked ->
-
-            when(isChecked){
-                true -> mercadonaId = 3
-                else -> mercadonaId = -1
-            }
-        }
-        binding.spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedItem = parent?.getItemAtPosition(position)
-                selectedItem?.let {
-                    categoryId = (selectedItem as Category).id
+        with(binding) {
+            chipMercadona.setOnCheckedChangeListener { _, isChecked ->
+                mercadonaId = when (isChecked) {
+                    true -> 1
+                    else -> -1
                 }
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            chipDia.setOnCheckedChangeListener { _, isChecked ->
+                diaId = when (isChecked) {
+                    true -> 2
+                    else -> -1
+                }
+            }
+            chipConsum.setOnCheckedChangeListener { _, isChecked ->
+                consumId = when (isChecked) {
+                    true -> 4
+                    else -> -1
+                }
+            }
+            chipAlcampo.setOnCheckedChangeListener { _, isChecked ->
+                alcampoId = when (isChecked) {
+                    true -> 3
+                    else -> -1
+                }
+            }
+            chipGroupPrices.setOnCheckedStateChangeListener { _, checkedIdList ->
+                priceSort = if (checkedIdList.isNotEmpty()) {
+                    when (checkedIdList[0]) {
+                        chipPriceAsc.id -> 1
+                        chipPriceDesc.id -> 2
+                        else -> -1
+                    }
+                } else {
+                    -1
+                }
+            }
+            chipGroupAlphabetic.setOnCheckedStateChangeListener { _, checkedIdList ->
+                alphabeticSort = if (checkedIdList.isNotEmpty()) {
+                    when (checkedIdList[0]) {
+                        chipAlphabeticAZ.id -> 1
+                        chipAlphabeticZA.id -> 2
+                        else -> -1
+                    }
+                } else {
+                    -1
+                }
+            }
+            imgOnSale.setOnClickListener {
+                onSale = !onSale
+                imgOnSale.setImageState(
+                    intArrayOf(R.drawable.sale),
+                    when (onSale) {
+                        true -> true
+                        false -> false
+                    }
+                )
+            }
+            spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem = parent?.getItemAtPosition(position)
+                    selectedItem?.let {
+                        categoryId = (selectedItem as Category).id
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+
+            btnFilters.setOnClickListener {
+                val productName: String = etProductName.text.toString()
+
+                findNavController().navigate(
+                    FiltersFragmentDirections.actionFiltersFragmentToProductsFragment(
+                        categoryId = categoryId,
+                        productName = productName,
+                        mercadonaId = mercadonaId,
+                        alcampoId = alcampoId,
+                        diaId = diaId,
+                        consumId = consumId,
+                        alphabeticSort = alphabeticSort,
+                        priceSort = priceSort,
+                        onSale = onSale
+                    )
+                )
+            }
         }
 
-        binding.btnFilters.setOnClickListener {
-            val productName: String? = binding.etProductName.text.toString()
 
-            findNavController().navigate(FiltersFragmentDirections.actionFiltersFragmentToProductsFragment(
-                categoryId = categoryId,
-                productName = productName,
-                mercadonaId = mercadonaId,
-                alcampoId = alcampoId,
-                diaId = diaId,
-                consumId = consumId
-            ))
-        }
     }
 }

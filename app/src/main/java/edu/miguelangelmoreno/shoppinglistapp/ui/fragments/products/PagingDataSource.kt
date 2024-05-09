@@ -17,16 +17,25 @@ class PagingDataSource(
     private val productName: String?,
     private val categoryId: Int?,
     private val supermarketIds: Set<Int>?,
-    private val onSale: Boolean
+    private val onSale: Boolean,
+    private val alphabeticSort: Int? = null,
+    private val priceSort: Int? = null
 ) :
     PagingSource<Int, Product>() {
-        private val userFavourites = userPrefs.getLoggedUser().favouriteProductsId
+    private val userFavourites = userPrefs.getLoggedUser().favouriteProductsId
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         return try {
             val page = params.key ?: 0
             val pageSize = params.loadSize
             val response = productRepository.fetchProducts(
-                page, pageSize, productName, categoryId, supermarketIds, onSale
+                page,
+                pageSize,
+                productName,
+                categoryId,
+                supermarketIds,
+                onSale,
+                alphabeticSort,
+                priceSort
             )
             val data = response.content
             val dbCount = productRepository.countAllProductsFromDB()
@@ -37,7 +46,7 @@ class PagingDataSource(
                 priceHistoryRepository.clearAll()
             }*/
 
-            var priceHistoryEntityList = mutableListOf<PriceHistoryEntity>()
+            val priceHistoryEntityList = mutableListOf<PriceHistoryEntity>()
             data.forEach { product ->
                 product.priceHistories
                     .forEach { priceHistory ->

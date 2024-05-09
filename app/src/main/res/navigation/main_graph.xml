@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_homeFragment_to_addProductFragment"
             app:destination="@id/addProductFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_importCodeFragment"
+            app:destination="@id/importCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/accountFragment"
@@ -63,6 +66,14 @@
         <action
             android:id="@+id/action_productsFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+        <argument
+            android:name="priceSort"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="alphabeticSort"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/favouritesFragment"
@@ -103,10 +114,15 @@
             android:name="name"
             app:argType="string"
             app:nullable="true"
-            android:defaultValue='""' />
+            android:defaultValue=" " />
         <argument
             android:name="id"
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
+    <fragment
+        android:id="@+id/importCodeFragment"
+        android:name="edu.miguelangelmoreno.shoppinglistapp.ui.fragments.importCode.ImportCodeFragment"
+        android:label="fragment_import_code"
+        tools:layout="@layout/fragment_import_code" />
 </navigation>

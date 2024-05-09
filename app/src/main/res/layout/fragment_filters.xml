@@ -194,6 +194,7 @@
                         app:singleSelection="true">
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/chipPriceAsc"
                             style="@style/Filters.Chip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -201,6 +202,7 @@
                             android:textSize="12sp" />
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/chipPriceDesc"
                             style="@style/Filters.Chip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -215,6 +217,7 @@
                         app:singleSelection="true">
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/chipAlphabeticAZ"
                             style="@style/Filters.Chip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -222,6 +225,7 @@
                             android:textSize="12sp" />
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/chipAlphabeticZA"
                             style="@style/Filters.Chip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -254,38 +258,6 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="2dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="5dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="15dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:gravity="center"
-                        android:text="@string/filter_favourite"
-                        android:textSize="12sp" />
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:backgroundTint="@color/white"
-                        android:src="@drawable/favorite" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -308,14 +280,15 @@
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center"
                         android:text="@string/filter_on_sale"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <ImageButton
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:id="@+id/imgOnSale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="@color/white"
-                        android:src="@drawable/ic_sales" />
+                        android:src="@drawable/sale" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

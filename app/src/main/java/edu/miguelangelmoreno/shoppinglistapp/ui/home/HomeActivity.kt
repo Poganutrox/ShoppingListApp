@@ -39,12 +39,10 @@ class HomeActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.CREATED){
                 addPrefs.addingSize.collect{size ->
                     if(size > 0){
-                        binding.tvNumberItems.visibility = VISIBLE
-                        binding.imgBasket.visibility = VISIBLE
+                        binding.linearTextImage.visibility = VISIBLE
                         binding.tvNumberItems.text = size.toString()
                     }else{
-                        binding.tvNumberItems.visibility = INVISIBLE
-                        binding.imgBasket.visibility = INVISIBLE
+                        binding.linearTextImage.visibility = INVISIBLE
                     }
                 }
             }
@@ -57,9 +55,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initListeners(){
+        val navController = this.findNavController(R.id.navHostFragment)
         binding.imgBasket.setOnClickListener {
-            val navController = this.findNavController(R.id.navHostFragment)
             navController.popBackStack(R.id.addProductFragment, false)
+        }
+        binding.imgCancel.setOnClickListener {
+            addPrefs.clear()
+            addPrefs.setIsAdding(false)
+            navController.popBackStack(R.id.homeFragment, false)
         }
     }
 }

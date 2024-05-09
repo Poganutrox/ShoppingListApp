@@ -8,6 +8,7 @@ import edu.miguelangelmoreno.shoppinglistapp.model.ShoppingListDTO
 import edu.miguelangelmoreno.shoppinglistapp.model.User
 import edu.miguelangelmoreno.shoppinglistapp.model.responses.PageResponse
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.math.BigDecimal
@@ -23,9 +24,10 @@ class APIDataSource @Inject constructor(
     suspend fun getProductById(productId: String): Response<Product> = api.getProductById(productId)
     suspend fun getProducts(
         page: Int, pageSize: Int, productName: String?, categoryId: Int?,
-        supermarketIds: Set<Int>?, onSale: Boolean?
+        supermarketIds: Set<Int>?, onSale: Boolean?,alphabeticSort: Int?,
+        priceSort: Int?
     ): PageResponse<Product> =
-        api.getProducts(page, pageSize, productName, categoryId, supermarketIds, onSale)
+        api.getProducts(page, pageSize, productName, categoryId, supermarketIds, onSale, alphabeticSort, priceSort)
 
     suspend fun getTimesProductAddedList(productId: String, userId: Int) =
         api.getTimesProductAddedList(productId, userId)
@@ -42,5 +44,16 @@ class APIDataSource @Inject constructor(
 
     suspend fun getFavouriteProduct(userId: Int) = api.getFavouriteProduct(userId)
     suspend fun getUserShoppingLists(userId: Int) = api.getUserShoppingLists(userId)
-    suspend fun saveShoppingList(shoppingListDTO: ShoppingListDTO) = api.saveShoppingList(shoppingListDTO)
+    suspend fun saveShoppingList(shoppingListDTO: ShoppingListDTO) =
+        api.saveShoppingList(shoppingListDTO)
+
+    suspend fun updateShoppingList(
+        shoppingListDTO: ShoppingListDTO
+    ) = api.updateShoppingList(shoppingListDTO)
+
+    suspend fun importShoppingList(applicantUserId: Int, uniqueCode: String) =
+        api.importShoppingList(applicantUserId, uniqueCode)
+
+    suspend fun deleteShoppingList(shoppingListId: Int,userId: Int) = api.deleteShoppingList(shoppingListId,userId)
+    suspend fun removeChanges(shoppingListId: Int,userId: Int) = api.removeChanges(shoppingListId,userId)
 }
