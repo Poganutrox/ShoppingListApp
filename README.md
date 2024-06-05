@@ -26,3 +26,12 @@ Economic difficulties necessitate careful spending, particularly on routine expe
 
 The application successfully integrates with supermarket APIs, providing real-time price comparisons and enabling efficient list management. Users can share lists, track price changes, and make informed purchasing decisions.
 
+![image](https://github.com/Poganutrox/ShoppingListApp/assets/63597815/dcf86680-1655-40b4-9550-23e15d89c064)
+
+![image](https://github.com/Poganutrox/ShoppingListApp/assets/63597815/26c406bc-08be-4d6a-95a0-7601e0e2a5f7)
+
+![image](https://github.com/Poganutrox/ShoppingListApp/assets/63597815/a8b314b6-5e0e-4b50-880e-96725f309b3b)
+
+![image](https://github.com/Poganutrox/ShoppingListApp/assets/63597815/aca55dcf-5bbb-4c29-abd5-463c4c35f568)
+
+
