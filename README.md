@@ -8,14 +8,13 @@ Grocery Sync is a dynamic shopping list application developed for Android. This 
 Economic difficulties necessitate careful spending, particularly on routine expenses like grocery shopping. Comparing supermarket prices manually is cumbersome, often deterring users from optimizing their spending. Grocery Sync addresses this issue by providing a convenient mobile app to compare real-time supermarket prices and manage shopping lists efficiently.
 
 
-### Application Requirements
+## Features
 
-- Internet connectivity for real-time price updates and synchronization.
-- User authentication and data security.
-- Efficient data retrieval from supermarket APIs.
-- User-friendly interface for list management and price comparison.
+- MVVC Architecture.
+- Views with XML.
+- Libraries such as Retrofit, DaggerHilt, Room, Paging3, MPAndroidChart, and more.
 
-### Objectives
+## Objectives
 
 - Retrieve and compare products from Mercadona, Consum, Alcampo, and Dia.
 - Filter products by name, supermarket, category, price, and promotional offers.
